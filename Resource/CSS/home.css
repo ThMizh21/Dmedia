@@ -4,7 +4,7 @@
     padding: 0;
  }
  header{
-    background-color: purple;
+    background-color: #261f3e;
     height: 8vh;
  }
   #logo{
@@ -38,7 +38,7 @@
     margin-right: 30px;
  }
  a:hover{
-    color: purple;
+    color: #261f3e;
  }
  #main{
     height: 92vh;

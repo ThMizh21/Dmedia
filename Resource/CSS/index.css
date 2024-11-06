@@ -53,15 +53,15 @@
     
     .form-box {
         border: 2px solid grey;
-        padding: 20px; /* Adjusts padding to keep form content inside comfortably */
+        padding: 10px; /* Less padding to fit mobile screens better */
         border-radius: 15px;
-        width: 100%; /* This width can also be set to a max-width if needed */
-        max-width: 400px; /* Limits maximum width to avoid stretching on large screens */
+        width: 95%; /* Use almost full width for smaller screens */
+        max-width: 100%; 
         text-align: center;
-        background-color: transparent; /* Semi-transparent background for a clean look */
+        background-color: transparent;
         backdrop-filter: blur(3px);
-        margin: 0 auto; /* Centers the container on the page */
-        box-sizing: border-box; /* Ensures padding does not affect overall width */
+        margin: 0 auto;
+        box-sizing: border-box;
     }
     
     h2 {
@@ -135,8 +135,9 @@
     body {
         font-family: Arial, sans-serif;
         background-image:url(../Images/register_desktop.png);
-       background-position-x: -484px;
-       background-position-y: -300px ;
+       background-size: 2000px;
+       background-position-x: -250px;
+       background-position-y: -150px;
        
     }
     
@@ -154,8 +155,8 @@
     img{
         width: 150px;
         height: 50px;
-        margin-top: 50px;
-        margin-left: 420px;
+        margin-top: 200px;
+        margin-left: 650px;
         
     }
     
