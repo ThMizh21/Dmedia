@@ -22,7 +22,8 @@
         background-image:url(../Images/register_mobile.jpg);
         background-position-x: -139px;
         background-position-y:-40px;
-        margin-left: 32px;
+        margin-left: 37px;
+        
     
     }
     
@@ -46,15 +47,15 @@
     img{
         width: 150px;
         height: 50px;
-        margin-top: 180px;
-        margin-left: 120px;
+        margin-top: 100px;
+        margin-left: 50px;
     }
     
     .form-box {
         border: 2px solid grey;
         padding: 20px 5px 4px 40px;
         border-radius: 15px;
-        width: 350px;
+        width: 250px;
         height: 500px;
         text-align: center;
         background-color: transparent;

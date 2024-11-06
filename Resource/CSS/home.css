@@ -1,0 +1,50 @@
+@media only screen and (min-width: 651px){
+ *{
+    margin: 0;
+    padding: 0;
+ }
+ header{
+    background-color: purple;
+    height: 8vh;
+ }
+  #logo{
+    height: 40px;
+    margin-top: 5px;
+    margin-left: 15px;
+  }
+ main{
+    display: grid;
+    grid-template-columns: 25% 75%;
+ }
+ #nav{
+ background-color: black; 
+ height: 92vh;
+ display: flex;
+ flex-direction: column;
+ padding-left: 50px;
+ border-right: 2px solid #262626;
+ 
+ }
+
+ .navi{
+   text-decoration: none;
+   color: white;
+   font-size: x-large;
+   line-height: 80px;
+ }
+ .fa-solid{
+    color: white;
+    font-size: 1.5em ;
+    margin-right: 30px;
+ }
+ a:hover{
+    color: purple;
+ }
+ #main{
+    height: 92vh;
+    background-color: black;
+ }
+ #container{
+    display: grid;
+ }
+}
