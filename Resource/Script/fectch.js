@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Reference to your Firestore collection
-const collectionRef = collection(db, "images");
+const collectionRef = collection(db, "userData");
 
 // Fetch data using getDocs (modular API)
 getDocs(collectionRef)
@@ -28,9 +28,9 @@ getDocs(collectionRef)
       const data = doc.data();
 
       // Get data from each document
-      const userName = data.userName;  // User's name
-      const profileImg = data.profileImg;  // Profile image URL
-      const mediaUrl = data.imgUrl;  // Image or video URL
+      const userName = data.username;  // User's name
+      const profileImg = data.profile;  // Profile image URL
+      const mediaUrl = data.post;  // Image or video URL
       const comments = data.comments || [];  // Array of comments (if any)
 
       // Create post container div
@@ -44,6 +44,7 @@ getDocs(collectionRef)
       const userImg = document.createElement("img");
       userImg.src = profileImg;  // Profile image URL
       userImg.alt = `${userName}'s profile image`;
+      userImg.classList.add("userPrf")
 
       const userNameDiv = document.createElement("div");
       userNameDiv.classList.add("userName");
@@ -57,46 +58,44 @@ getDocs(collectionRef)
       visCDiv.classList.add("visC");
 
       if (mediaUrl) {
-        // Check if the media URL is an image or video
-        const fileIdMatch = mediaUrl.match(/file\/d\/(.*?)\//); // Extract the FILE_ID from Google Drive URL
-        if (fileIdMatch) {
-          const fileId = fileIdMatch[1];
-          const googleDriveUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-
-          if (mediaUrl.includes('.mp4')) {
-            // For videos, create a <video> tag
+        // Check if the media URL ends with .mp4 (video) or .jpg, .png (image)
+        const fileExtension = mediaUrl.split('.').pop().toLowerCase();  // Get file extension (mp4, jpg, png, etc.)
+        
+        // If the media URL is a video
+        if (fileExtension === 'mp4') {
             const videoElement = document.createElement("video");
             videoElement.classList.add("mediaContent");
-            videoElement.src = googleDriveUrl;
+            videoElement.src = mediaUrl;  // Use the full URL for the video
             videoElement.controls = true;  // Enable controls for the video
             visCDiv.appendChild(videoElement);
-          } else {
-            // For images, create an <img> tag
+        } 
+        // If the media URL is an image (jpg, png, jpeg)
+        else if (['jpg', 'jpeg', 'png'].includes(fileExtension)) {
             const imgElement = document.createElement("img");
             imgElement.classList.add("mediaContent");
-            imgElement.src = googleDriveUrl;
-            imgElement.alt = "Post Image";  // Optional: Add alt text
+            imgElement.src = mediaUrl;  // Use the full URL for the image
+            imgElement.alt = "Post Image";  // Optional: Add alt text for image
             visCDiv.appendChild(imgElement);
-          }
         }
-      }
+        // Optionally, handle other media types (e.g., audio, PDF)
+        else {
+            console.log("Unsupported media type:", fileExtension);
+        }
+    }
+    
 
-      // Append cHead and visC to the post div
-      postDiv.appendChild(cHeadDiv);
-      postDiv.appendChild(visCDiv);
-
-      // Create comments section
-      const commentsDiv = document.createElement("div");
-      commentsDiv.classList.add("comments");
-
-      comments.forEach(comment => {
-        const commentPara = document.createElement("p");
-        commentPara.textContent = comment;
-        commentsDiv.appendChild(commentPara);
-      });
-
-      // Append comments to the post div
-      postDiv.appendChild(commentsDiv);
+    
+    // Create comments section
+    const commentsDiv = document.createElement("div");
+    commentsDiv.classList.add("comments");
+    
+    
+    
+    // Append cHead and visC to the post div
+    // Append comments to the post div
+    postDiv.appendChild(cHeadDiv);
+    postDiv.appendChild(visCDiv);
+    postDiv.appendChild(commentsDiv);
 
       // Append the entire post to the main container
       document.getElementById("postContainer").appendChild(postDiv);

@@ -1,0 +1,184 @@
+[
+      {
+        "username": "john_doe",
+        "name":"John Doe",
+        "profile": "https://example.com/profiles/john_doe",
+        "post": "../images/post/img1.jpg",
+        "likes": 150,
+        "comments": 45,
+        "date_of_post": "2024-11-01"
+      },
+      {
+        "username": "sarah_smith",
+        "name":"Sarah Smith",
+        "profile": "https://example.com/profiles/sarah_smith",
+        "post": "../images/post/img2.jpg",
+        "likes": 200,
+        "comments": 60,
+        "date_of_post": "2024-11-02"
+      },
+      {
+        "username": "michael_jones",
+        "name":"Micheal Jones",
+        "profile": "https://example.com/profiles/michael_jones",
+        "post": "../images/post/img3.jpg",
+        "likes": 180,
+        "comments": 50,
+        "date_of_post": "2024-11-03"
+      },
+      {
+        "username": "laura_brown",
+        "name":"Laura Brown",
+        "profile": "https://example.com/profiles/laura_brown",
+        "post": "../images/post/vdo1.mp4",
+        "likes": 120,
+        "comments": 30,
+        "date_of_post": "2024-11-04"
+      },
+      {
+        "username": "alex_davis",
+        "name":"Alex Davis",
+        "profile": "https://example.com/profiles/alex_davis",
+        "post": "../images/post/vdo5.mp4",
+        "likes": 250,
+        "comments": 75,
+        "date_of_post": "2024-11-05"
+      },
+      {
+        "username": "emily_white",
+        "name":"Emily White",
+        "profile": "https://example.com/profiles/emily_white",
+        "post": "../images/post/vdo4.mp4",
+        "likes": 160,
+        "comments": 40,
+        "date_of_post": "2024-11-06"
+      },
+      {
+        "username": "david_martin",
+        "name":"David Martin",
+        "profile": "https://example.com/profiles/david_martin",
+        "post": "../images/post/img4.jpg",
+        "likes": 130,
+        "comments": 35,
+        "date_of_post": "2024-11-07"
+      },
+      {
+        "username": "lucy_green",
+        "name":"Lucy Green",
+        "profile": "https://example.com/profiles/lucy_green",
+        "post": "../images/post/vdo2.mp4",
+        "likes": 140,
+        "comments": 25,
+        "date_of_post": "2024-11-08"
+      },
+      {
+        "username": "william_black",
+        "name":"William Black",
+        "profile": "https://example.com/profiles/william_black",
+        "post": "../images/post/vdo3.mp4",
+        "likes": 320,
+        "comments": 120,
+        "date_of_post": "2024-11-09T20:00:00Z"
+      },
+      {
+        "username": "olivia_taylor",
+        "name":"Olivia Taylor",
+        "profile": "https://example.com/profiles/olivia_taylor",
+        "post": "../images/post/img5.jpg",
+        "likes": 190,
+        "comments": 65,
+        "date_of_post": "2024-11-10"
+      },
+      {
+        "username": "james_wilson",
+        "name" : "James Wilson",
+        "profile": "https://example.com/profiles/james_wilson",
+        "post": "../images/post/img6.jpg",
+        "likes": 110,
+        "comments": 20,
+        "date_of_post": "2024-11-11"
+      },
+      {
+        "username": "emma_johnson",
+        "name" :"Emma Johnson",
+        "profile": "https://example.com/profiles/emma_johnson",
+        "post": "../images/post/img7.jpg",
+        "likes": 240,
+        "comments": 80,
+        "date_of_post": "2024-11-12"
+      },
+      {
+        "username": "ryan_moore",
+        "name":"Ryan Moore",
+        "profile": "https://example.com/profiles/ryan_moore",
+        "post": "../images/post/img8.jpg",
+        "likes": 170,
+        "comments": 50,
+        "date_of_post": "2024-11-13"
+      },
+      {
+        "username": "hannah_perez",
+        "name":"HannahPerez",
+        "profile": "https://example.com/profiles/hannah_perez",
+        "post": "Just adopted a new puppy! Meet Max.",
+        "likes": 300,
+        "comments": 90,
+        "date_of_post": "2024-11-14"
+      },
+      {
+        "username": "daniel_clark",
+        "name":"Daniel Clark",
+        "profile": "https://example.com/profiles/daniel_clark",
+        "post": "Celebrated my birthday today. Thanks to everyone for the love!",
+        "likes": 350,
+        "comments": 100,
+        "date_of_post": "2024-11-15"
+      },
+      {
+        "username": "sophie_lee",
+        "name":"Sophie Lee", 
+        "profile": "https://example.com/profiles/sophie_lee",
+        "post": "Tried a new yoga routine this morning. Feeling great!",
+        "likes": 210,
+        "comments": 55,
+        "date_of_post": "2024-11-16T07:15:00Z"
+      },
+      {
+        "username": "ethan_harris",
+        "name":"Ethan Harris",
+        "profile": "https://example.com/profiles/ethan_harris",
+        "post": "Spending the day at the beach. So relaxing!",
+        "likes": 180,
+        "comments": 65,
+        "date_of_post": "2024-11-17"
+      },
+      {
+        "username": "maria_kim",
+        "name":"Maria Kim",
+        "profile": "https://example.com/profiles/maria_kim",
+        "post": "Visited the art museum today. So many beautiful pieces!",
+        "likes": 130,
+        "comments": 40,
+        "date_of_post": "2024-11-18"
+      },
+      {
+        "username": "liam_taylor",
+        "nmae":"Liam Taylor",
+        "profile": "https://example.com/profiles/liam_taylor",
+        "post": "Had a blast at the concert last night!",
+        "likes": 270,
+        "comments": 110,
+        "date_of_post": "2024-11-19"
+      },
+      {
+        "username": "chloe_smith",
+        "name":"Chloe Smith",
+        "profile": "https://example.com/profiles/chloe_smith",
+        "post": "Finally cleaned out my closet. Feels so good!",
+        "likes": 110,
+        "comments": 20,
+        "date_of_post": "2024-11-20"
+      }
+    ]
+  
+  
