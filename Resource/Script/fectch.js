@@ -44,6 +44,7 @@ getDocs(collectionRef)
       const userImg = document.createElement("img");
       userImg.src = profileImg;  // Profile image URL
       userImg.alt = `${userName}'s profile image`;
+      userImg.classList.add("userPrf")
 
       const userNameDiv = document.createElement("div");
       userNameDiv.classList.add("userName");
@@ -83,18 +84,18 @@ getDocs(collectionRef)
     }
     
 
-      // Append cHead and visC to the post div
-      postDiv.appendChild(cHeadDiv);
-      postDiv.appendChild(visCDiv);
-
-      // Create comments section
-      const commentsDiv = document.createElement("div");
-      commentsDiv.classList.add("comments");
-
-     
-
-      // Append comments to the post div
-      postDiv.appendChild(commentsDiv);
+    
+    // Create comments section
+    const commentsDiv = document.createElement("div");
+    commentsDiv.classList.add("comments");
+    
+    
+    
+    // Append cHead and visC to the post div
+    // Append comments to the post div
+    postDiv.appendChild(cHeadDiv);
+    postDiv.appendChild(visCDiv);
+    postDiv.appendChild(commentsDiv);
 
       // Append the entire post to the main container
       document.getElementById("postContainer").appendChild(postDiv);
