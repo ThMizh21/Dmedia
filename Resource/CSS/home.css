@@ -174,31 +174,43 @@ body {
 }
 
 
-.post{
-display: grid;
-grid-template-rows: 10vh 50vh 20vh;
-align-items: center;
-margin-left: 670px;
-
+.visC {
+  box-sizing: border-box;
+  height: 450px; /* Adjust height as needed */
+  width: 30vw;  /* Adjust width as needed */
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Ensures content doesn't overflow the container */
 }
+
+.visC img, 
+.visC video {
+  box-sizing: border-box;
+  height: 100%; /* Makes the media take full height */
+  width: 100%;  /* Makes the media take full width */
+  object-fit: cover; /* Ensures proper scaling */
+}
+
+.post {
+  display: grid;
+  grid-template-rows: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive layout */
+  /* gap: 16px; Adds spacing between items */
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  /* padding: 16px; */
+}
+
+
 .cHead{
 background-color: black;
 height: 10vh;
 width: 30vw;
 /* margin-top: 50px; */
 }
-.visC{
-  background-color: white;
-  height: 50vh;
-  width: 30vw;
 
-}
-.visC img{
-  box-sizing: border-box;
-  height: 50vh;
-  width: 52vh;
-
-}
 .cD{
   background-color: grey;
   height: 20vh;
