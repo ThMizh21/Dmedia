@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Reference to your Firestore collection
-const collectionRef = collection(db, "userData");
+const collectionRef = collection(db, "posts");
 
 // Fetch data using getDocs (modular API)
 getDocs(collectionRef)
