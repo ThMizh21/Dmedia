@@ -1,23 +1,36 @@
 const sidebar = document.querySelector(".sidebar");
 const sidebarToggler = document.querySelector(".sidebar-toggler");
 const menuToggler = document.querySelector(".menu-toggler");
-const logoFull = document.getElementById("logo-full");       
-const logoCollapsed = document.getElementById("logo-collapsed"); 
+const logoFull = document.getElementById("logo-full");
+const logoCollapsed = document.getElementById("logo-collapsed");
 
 // Ensure these heights match the CSS sidebar height values
-let collapsedSidebarHeight = "56px"; 
-let fullSidebarHeight = "calc(100vh - 32px)"; 
+let collapsedSidebarHeight = "56px";
+let fullSidebarHeight = "calc(100vh - 32px)";
 
 // Function to update logo visibility based on sidebar state
 const updateLogoVisibility = () => {
   if (sidebar.classList.contains("collapsed")) {
-    logoFull.style.display = "none";         // Hide full logo
-    logoCollapsed.style.display = "block";    // Show collapsed logo
+    logoFull.style.display = "none"; // Hide full logo
+    logoCollapsed.style.display = "block"; // Show collapsed logo
   } else {
-    logoFull.style.display = "block";         // Show full logo
-    logoCollapsed.style.display = "none";     // Hide collapsed logo
+    logoFull.style.display = "block"; // Show full logo
+    logoCollapsed.style.display = "none"; // Hide collapsed logo
   }
-}
+};
+
+// Initialize sidebar and logo visibility on page load
+const initializeSidebar = () => {
+  // Assume sidebar is not collapsed initially
+  if (window.innerWidth >= 1024) {
+    sidebar.style.height = fullSidebarHeight;
+    sidebar.classList.remove("collapsed"); // Ensure full sidebar for larger screens
+  } else {
+    sidebar.classList.remove("collapsed"); // Ensure no collapse for smaller screens by default
+    sidebar.style.height = "auto";
+  }
+  updateLogoVisibility(); // Ensure correct logo is displayed
+};
 
 // Toggle sidebar's collapsed state
 sidebarToggler.addEventListener("click", () => {
@@ -29,7 +42,7 @@ sidebarToggler.addEventListener("click", () => {
 const toggleMenu = (isMenuActive) => {
   sidebar.style.height = isMenuActive ? `${sidebar.scrollHeight}px` : collapsedSidebarHeight;
   menuToggler.querySelector("span").innerText = isMenuActive ? "close" : "menu";
-}
+};
 
 // Toggle menu-active class and adjust height
 menuToggler.addEventListener("click", () => {
@@ -41,8 +54,8 @@ window.addEventListener("resize", () => {
   if (window.innerWidth >= 1024) {
     sidebar.style.height = fullSidebarHeight;
     sidebar.classList.remove("collapsed"); // Ensure sidebar is fully open on larger screens
-    logoFull.style.display = "block";       // Show full logo
-    logoCollapsed.style.display = "none";   // Hide collapsed logo
+    logoFull.style.display = "block"; // Show full logo
+    logoCollapsed.style.display = "none"; // Hide collapsed logo
   } else {
     sidebar.classList.remove("collapsed");
     sidebar.style.height = "auto";
@@ -50,6 +63,10 @@ window.addEventListener("resize", () => {
     updateLogoVisibility(); // Update logo visibility based on sidebar state
   }
 });
+
+// Initialize sidebar and logo visibility on page load
+document.addEventListener("DOMContentLoaded", initializeSidebar);
+
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";

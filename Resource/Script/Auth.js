@@ -94,7 +94,7 @@ form.addEventListener("submit", function (event) {
                 const user = userCredential.user;
                 const userData = {
                     Name: name.value,
-                    userName: username.value,
+                    username: username.value,
                     email: email.value
                 };
 
