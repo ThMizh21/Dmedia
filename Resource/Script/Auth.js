@@ -62,9 +62,19 @@ form.addEventListener("submit", function (event) {
     }
 
     // Validate username (should not contain spaces)
-    if (/\s/.test(username.value)) {
+    if (username.value.trim() === "") {
+        formIsValid = false;
+        usernameError.textContent = "Username cannot be empty!";
+    } 
+    // Check if the username contains any spaces
+    else if (/\s/.test(username.value)) {
         formIsValid = false;
         usernameError.textContent = "Username should not contain spaces!";
+    } 
+    // Check if the username is more than 3 characters
+    else if (username.value.length <= 3) {
+        formIsValid = false;
+        usernameError.textContent = "Username must be more than 3 characters!";
     }
 
     // Validate email
@@ -94,7 +104,7 @@ form.addEventListener("submit", function (event) {
                 const user = userCredential.user;
                 const userData = {
                     Name: name.value,
-                    username: username.value,
+                    userName: username.value,
                     email: email.value
                 };
 
@@ -121,7 +131,6 @@ form.addEventListener("submit", function (event) {
             });
     }
 });
-
 // Sign in form submission handler
 const signIn = document.getElementById('submitSignIn');
 signIn.addEventListener('click', (event) => {
@@ -129,6 +138,20 @@ signIn.addEventListener('click', (event) => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
+    // Email validation using regular expression
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showMessage('Please enter a valid email address', 'signInMessage');
+        return; // Stop the sign-in process if the email is invalid
+    }
+
+    // Check if password is entered
+    if (password.trim() === '') {
+        showMessage('Please enter your password', 'signInMessage');
+        return; // Stop the sign-in process if the password is not provided
+    }
+
+    // Proceed with sign-in if both email and password are valid
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             showMessage('Login is successful', 'signInMessage');
@@ -145,6 +168,7 @@ signIn.addEventListener('click', (event) => {
             }
         });
 });
+
 
 // Password visibility toggle for sign up
 const togglePassword = document.getElementById("togglePassword");
@@ -165,3 +189,4 @@ togglePassword.addEventListener("click", function () {
       </svg>`;
   togglePassword.innerHTML = icon;
 });
+

@@ -9,7 +9,7 @@
 
 body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #805fb5,#261f3e );
+  background-color: white  ;
 }
 
 .sidebar {
@@ -17,7 +17,7 @@ body {
   width: 330px;
   margin: 16px;
   border-radius: 16px;
-  background: #261f3e;
+  background: #608BC1;
   height: calc(100vh - 32px);
   transition: all 0.4s ease;
   z-index: 10;
@@ -179,25 +179,27 @@ body {
 .post {
   display: grid;
   grid-template-rows: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive layout */
-  width: 450px;
+  width: 550px;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  border: 2px solid grey;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 
 }
 
 .cHead{
   display: flex;
   flex-direction: row;
-  background-color: black;
+  background-color:white;
   height: 10vh;
-  width: 450px;
+  width: 550px;
   margin-top: -220px;
+  border-top: 1px solid rgb(142, 142, 142);
 }
 
    .userName{
-    color: white;
+    color: black;
     padding-top:25px ;
     padding:33px 0px 0px 15px;
 
@@ -212,8 +214,8 @@ body {
   
   .visC {
     box-sizing: border-box;
-    height: 450px; /* Adjust height as needed */
-    width: 450px;  /* Adjust width as needed */
+    height: 550px; /* Adjust height as needed */
+    width: 550px;  /* Adjust width as needed */
     background-color: white;
     display: flex;
     justify-content: center;
@@ -221,7 +223,6 @@ body {
     overflow: hidden; /* Ensures content doesn't overflow the container */
     margin-top: -218px;
     border-radius: 5px;
-    /* border: 1px solid white; */
   }
   
   .visC img, 
@@ -229,13 +230,15 @@ body {
     box-sizing: border-box;
     height: 100%; /* Makes the media take full height */
     width: 100%;  /* Makes the media take full width */
-    object-fit: cover; /* Ensures proper scaling */
+    object-fit: cover;
+    align-items: center; /* Ensures proper scaling */
   }
+  
 
   .cD {
     
-    background-color: black;  /* Set background color to black */
-    color: white;  /* Set text color to white */
+    background-color:white;  /* Set background color to black */
+    color: black;  /* Set text color to white */
     padding: 10px;  /* Add padding for better spacing */
     font-size: 14px;  /* Appropriate font size */
     width: 100%;  /* Make sure it takes the full width of the post */

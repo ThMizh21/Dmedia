@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="./style.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js"></script>
+</head>
+<body>
+  <!-- Profile Section -->
+  <div class="profile-container">
+    <div class="profile-header">
+      <!-- Profile photo -->
+      <img id="profilePhoto" class="profile-photo" src="https://via.placeholder.com/150" alt="Profile Photo">
+      <button id="editProfileButton">Edit Profile</button>
+    </div>
+    <div class="profile-info">
+      <h1 id="profileName">John Doe</h1>
+      <p id="profileUsername">@john_doe</p>
+      <p id="aboutMe">This is the bio section where the user describes themselves.</p>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Edit Profile</h2>
+      <label for="editName">Name:</label>
+      <input type="text" id="editName" placeholder="Enter your name">
+
+      <label for="editUsername">Username:</label>
+      <input type="text" id="editUsername" placeholder="Enter your username">
+
+      <label for="editAboutMe">About Me:</label>
+      <textarea id="editAboutMe" placeholder="Tell us about yourself"></textarea>
+
+      <label for="editPhoto">Profile Photo:</label>
+      <input type="file" id="editPhoto">
+
+      <button id="uploadProfile">Upload New Photo</button>
+      
+      <button id="saveEditProfile">Save Changes</button>
+      <button id="cancelEditProfile">Cancel</button>
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
