@@ -66,6 +66,10 @@ form.addEventListener("submit", function (event) {
         formIsValid = false;
         usernameError.textContent = "Username should not contain spaces!";
     }
+    if (username.value.length <3) {
+        formIsValid = false;
+        usernameError.textContent = "Username should be more than 3 characters.";
+    }
 
     // Validate email
     const emailPattern = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;  // Regex for basic email validation
