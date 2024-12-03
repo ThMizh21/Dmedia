@@ -9,7 +9,7 @@
 
 body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #805fb5,#261f3e );
+  background-color: white  ;
 }
 
 .sidebar {
@@ -17,9 +17,10 @@ body {
   width: 330px;
   margin: 16px;
   border-radius: 16px;
-  background: #261f3e;
+  background: #608BC1;
   height: calc(100vh - 32px);
   transition: all 0.4s ease;
+  z-index: 10;
 }
 
 
@@ -178,37 +179,50 @@ body {
 .post {
   display: grid;
   grid-template-rows: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive layout */
-  /* gap: 16px; Adds spacing between items */
+  width: 550px;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  /* padding: 16px; */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+
 }
 
 .cHead{
-  background-color: black;
+  display: flex;
+  flex-direction: row;
+  background-color:white;
   height: 10vh;
-  width: 450px;
-  margin-top: -220px;}
+  width: 550px;
+  margin-top: -220px;
+  border-top: 1px solid rgb(142, 142, 142);
+}
 
    .userName{
-    color: white;
+    color: black;
+    padding-top:25px ;
+    padding:33px 0px 0px 15px;
+
   }
   .userPrf{
     width :50px;
+    height: 50px;
     border-radius: 50%;
+    margin: 20px 0px 0px 10px;
+
   }
   
   .visC {
     box-sizing: border-box;
-    height: 450px; /* Adjust height as needed */
-    width: 450px;  /* Adjust width as needed */
+    height: 550px; /* Adjust height as needed */
+    width: 550px;  /* Adjust width as needed */
     background-color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden; /* Ensures content doesn't overflow the container */
     margin-top: -218px;
+    border-radius: 5px;
   }
   
   .visC img, 
@@ -216,15 +230,50 @@ body {
     box-sizing: border-box;
     height: 100%; /* Makes the media take full height */
     width: 100%;  /* Makes the media take full width */
-    object-fit: cover; /* Ensures proper scaling */
+    object-fit: cover;
+    align-items: center; /* Ensures proper scaling */
   }
+  
 
-.cD{
-  background-color: grey;
-  height: 20vh;
-  width: 30vw;
-
-}
+  .cD {
+    
+    background-color:white;  /* Set background color to black */
+    color: black;  /* Set text color to white */
+    padding: 10px;  /* Add padding for better spacing */
+    font-size: 14px;  /* Appropriate font size */
+    width: 100%;  /* Make sure it takes the full width of the post */
+    /* border-radius: 10px;  Rounded corners */
+    /* margin-top: 10px;  Space above the cD */
+  }
+  
+  /* Caption styling inside cD */
+  .cD .caption {
+    font-size: 16px;  /* Adjust font size for caption */
+    margin-bottom: 8px;  /
+  }
+  
+  .cD .postInfo {
+    font-size: 12px;  
+    margin-bottom: 8px;  
+  }
+  
+  /* Styling for the comments section */
+  .cD .comments {
+    font-size: 12px;  /* Set font size for comments */
+    max-height: 100px;  /* Limit the height of the comments section */
+    overflow-y: auto;  /* Allow scrolling if comments exceed the max height */
+  }
+  
+  /* Individual comment styling */
+  .cD .comments div {
+    margin-bottom: 4px;  /* Space between each comment */
+  }
+  
+  /* Styling for "No comments yet" text */
+  .cD .comments .noComments {
+    font-style: italic;  /* Italicize the "No comments yet" text */
+    color: #bbb;  /* Lighter color */
+  }
 
 /* Responsive media query code for small screens */
 @media (max-width: 920px) {
