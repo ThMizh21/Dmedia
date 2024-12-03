@@ -44,7 +44,7 @@ font-size: 12px;
     
     body {
         font-family: Arial, sans-serif;
-        background-color: #292142;  
+        background-color: white;  
         margin-left: 18px;
     
     }
@@ -79,7 +79,7 @@ font-size: 12px;
         width: 95%; /* Use almost full width for smaller screens */
         max-width: 100%; 
         text-align: center;
-        background-color: transparent;
+        background-color: #608bc1;
         backdrop-filter: blur(3px);
         margin: 0 auto;
         box-sizing: border-box;
@@ -156,7 +156,7 @@ font-size: 12px;
     
     body {
         font-family: Arial, sans-serif;
-        background-color: #292142  ;
+        background-color: white  ;
         /* margin-top: 200px; */
        
     }
@@ -187,7 +187,7 @@ font-size: 12px;
         width: 100%; /* This width can also be set to a max-width if needed */
         max-width: 450px; /* Limits maximum width to avoid stretching on large screens */
         text-align: center;
-        background-color: transparent; /* Semi-transparent background for a clean look */
+        background-color: #608bc1; /* Semi-transparent background for a clean look */
         backdrop-filter: blur(3px);
         margin:auto; /* Centers the container on the page */
         box-sizing: border-box; /* Ensures padding does not affect overall width */
