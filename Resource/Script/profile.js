@@ -28,7 +28,7 @@ const usernameElement = document.getElementById('username');
 const bioElement = document.getElementById('bio');
 const followersCount = document.getElementById('followers-count');
 const followingCount = document.getElementById('following-count');
-const postsGrid = document.getElementById('posts-grid');
+const postsGrid = document.getElementById('posts-grid'); 
 const editProfileBtn = document.getElementById('edit-profile-btn');
 const editProfileModal = document.getElementById('edit-profile-modal');
 const saveProfileBtn = document.getElementById('save-profile-btn');
@@ -58,10 +58,12 @@ async function loadUserProfile(uid) {
         const userDoc = await getDoc(doc(firestore, 'users', uid));
         if (userDoc.exists()) {
             const userData = userDoc.data();
-            profileImg.src = userData.profile || 'default-profile-pic.jpg';
-            nameElement.textContent = userData.name || 'No Name'; 
+            // Check if there's a profile image, otherwise use default
+            const profileImageUrl = userData.profile || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733319438/download_4_edqwjy.jpg';
+            profileImg.src = profileImageUrl;
+            nameElement.textContent = userData.name || 'No Name';
             usernameElement.textContent = userData.username;
-            bioElement.textContent = userData.bio || ''; // Display bio text with line breaks
+            bioElement.textContent = userData.bio || ''; 
             followersCount.textContent = userData.followersCount || 0;
             followingCount.textContent = userData.followingCount || 0;
 
@@ -76,19 +78,92 @@ async function loadUserProfile(uid) {
 // Load User Posts
 async function loadUserPosts(uid) {
     try {
-        const postsQuery = query(collection(firestore, 'posts'), where('uid', '==', uid)); // query posts by the user's UID
+        const postsQuery = query(collection(firestore, 'posts'), where('userId', '==', uid)); 
         const querySnapshot = await getDocs(postsQuery);
+        
         postsGrid.innerHTML = ''; // Clear previous posts before adding new ones
 
-        querySnapshot.forEach(doc => {
-            const post = doc.data();
-            const postImg = document.createElement('img');
-            postImg.src = post.imageUrl; // Assuming the post has an image URL
-            postsGrid.appendChild(postImg); // Append the post to the grid
-        });
+        if (querySnapshot.empty) {
+            // Display a message if no posts are found
+            const noPostsMessage = document.createElement('p');
+            noPostsMessage.textContent = 'No post yet';
+            postsGrid.appendChild(noPostsMessage);
+        } else {
+            // If posts are found, display them
+            querySnapshot.forEach(doc => {
+                const post = doc.data();
+                const postDiv = document.createElement('div');
+                postDiv.classList.add('post-item');
+                
+                if (post.post) {
+                    const postImg = document.createElement('img');
+                    postImg.src = post.post; // Assuming the post has an image URL
+                    postImg.style.width = '250px'; 
+                    postImg.style.height = '250px'; 
+                    postImg.style.objectFit = 'cover'; 
+
+                    postImg.addEventListener('click', () => {
+                        openPostModal(post);
+                    });
+
+                    postDiv.appendChild(postImg);
+                }
+
+                // Removed post description display (no text below the image)
+                postsGrid.appendChild(postDiv); // Append the post to the grid
+            });
+        }
     } catch (error) {
         console.error('Error loading posts: ', error);
     }
+}
+
+// Function to open the post details modal
+function openPostModal(post) {
+    const modal = document.createElement('div');
+    modal.classList.add('post-modal');
+    
+    const modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+
+    const modalImg = document.createElement('img');
+    modalImg.src = post.post;
+    modalImg.style.width = '100%'; 
+    modalImg.style.height = 'auto'; 
+    modalContent.appendChild(modalImg);
+
+    const modalCaption = document.createElement('p');
+    modalCaption.textContent = post.caption || 'No caption';
+    modalContent.appendChild(modalCaption);
+
+    const commentsDiv = document.createElement('div');
+    commentsDiv.classList.add('comments');
+    if (post.comments && post.comments.length > 0) {
+        post.comments.forEach(comment => {
+            const commentDiv = document.createElement('div');
+            commentDiv.classList.add('comment');
+            commentDiv.textContent = comment;
+            commentsDiv.appendChild(commentDiv);
+        });
+    } else {
+        const noComments = document.createElement('p');
+        noComments.textContent = 'No comments yet.';
+        commentsDiv.appendChild(noComments);
+    }
+    modalContent.appendChild(commentsDiv);
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closePostModal(modal); 
+        }
+    });
+}
+
+function closePostModal(modal) {
+    document.body.removeChild(modal);
 }
 
 // Open Edit Profile Modal
@@ -106,33 +181,59 @@ editProfileBtn.addEventListener('click', async () => {
 });
 
 // Save Edited Profile
+// Save Edited Profile
 saveProfileBtn.addEventListener('click', async () => {
     const newName = editNameInput.value;
     const newUsername = editUsernameInput.value;
     const newBio = editBioInput.value;
-    const profileImgFile = editProfileImgInput.files[0];
+    const profileImgFile = editProfileImgInput.files[0];  // The uploaded image file
 
     try {
         let profileImageUrl = null;
 
-        // If the user has selected a new profile image
+        // Check if a file is selected
         if (profileImgFile) {
-            const profileImageRef = ref(storage, `profileImages/${currentUserUid}`);
-            await uploadBytes(profileImageRef, profileImgFile);
-            profileImageUrl = await getDownloadURL(profileImageRef);
+            console.log('Uploading file: ', profileImgFile);
+
+            // Create FormData to send the file to Cloudinary
+            const formData = new FormData();
+            formData.append('file', profileImgFile);
+            formData.append('upload_preset', 'ml_default');  // Your Cloudinary upload preset
+            formData.append('cloud_name', 'dzyypiqod'); // Cloudinary cloud name (change if necessary)
+
+            // Upload the file to Cloudinary
+            const res = await fetch('https://api.cloudinary.com/v1_1/dzyypiqod/image/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();  // Parse the response from Cloudinary
+
+            // Log the response for debugging
+            console.log('Cloudinary response:', data);
+
+            // If Cloudinary returns a secure_url, assign it to profileImageUrl
+            if (data.secure_url) {
+                profileImageUrl = data.secure_url;
+            } else {
+                throw new Error('Cloudinary upload failed. Response: ' + JSON.stringify(data));
+            }
         } else {
-            // If no new image is selected, we keep the existing profile image URL
-            const userDoc = await getDoc(doc(firestore, 'users', currentUserUid));
-            const userData = userDoc.data();
-            profileImageUrl = userData.profile; // Keep existing profile image URL
+            // If no new image is selected, use the default profile image URL
+            profileImageUrl = 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733319438/download_4_edqwjy.jpg';
         }
 
-        // Update user data in Firestore
+        // Ensure profileImageUrl is valid
+        if (!profileImageUrl) {
+            throw new Error('Profile image URL is undefined or invalid');
+        }
+
+        // Update Firestore with new profile data, including profile image URL
         await updateDoc(doc(firestore, 'users', currentUserUid), {
             name: newName,
             username: newUsername,
             bio: newBio,
-            profile: profileImageUrl // Keep the updated or existing profile image URL
+            profile: profileImageUrl // Save the Cloudinary URL
         });
 
         loadUserProfile(currentUserUid); // Reload the profile to reflect changes
@@ -140,9 +241,4 @@ saveProfileBtn.addEventListener('click', async () => {
     } catch (error) {
         console.error('Error saving profile: ', error);
     }
-});
-
-// Cancel Edit Profile
-cancelEditBtn.addEventListener('click', () => {
-    editProfileModal.style.display = 'none';
 });
