@@ -284,6 +284,7 @@ body {
     scrollbar-width: none;
     width: calc(100% - 26px);
     max-height: calc(100vh - 26px);
+    margin-top:-100px ;
   }
 
   .sidebar.menu-active {
@@ -295,7 +296,7 @@ body {
     top: 0;
     z-index: 20;
     border-radius: 16px;
-    background: #151A2D;
+    background: #608BC1;
     padding: 8px 10px;
   }
 
@@ -337,16 +338,32 @@ body {
     position: relative;
     bottom: 0;
     margin: 40px 0 30px;
+
+  }
+  main{
+    margin-top: 100px;
+  }
+
+  .post {
+    display: grid;
+    grid-template-rows: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive layout */
+    /* width: px; */
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+  
+  
   }
 
   .cHead{
-    background-color: black;
+    background-color: white;
     height: 10vh;
     width: 380px;
     margin-top: -220px;}
   
      .userName{
-      color: white;
+      color: black;
     }
     
     .visC {
@@ -370,9 +387,9 @@ body {
     }
   
   .cD{
-    background-color: grey;
+    background-color: white;
     height: 20vh;
-    width: 30vw;
+    width: 95vw;
   
   }
   
