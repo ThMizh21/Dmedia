@@ -59,7 +59,7 @@ async function loadUserProfile(uid) {
         if (userDoc.exists()) {
             const userData = userDoc.data();
             // Check if there's a profile image, otherwise use default
-            const profileImageUrl = userData.profile || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733319438/download_4_edqwjy.jpg';
+            const profileImageUrl = userData.profile || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg';
             profileImg.src = profileImageUrl;
             nameElement.textContent = userData.name || 'No Name';
             usernameElement.textContent = userData.username;
@@ -119,38 +119,76 @@ async function loadUserPosts(uid) {
 }
 
 // Function to open the post details modal
-function openPostModal(post) {
+// Function to open the post details modal
+async function openPostModal(post) {
     const modal = document.createElement('div');
     modal.classList.add('post-modal');
     
     const modalContent = document.createElement('div');
     modalContent.classList.add('modal-content');
 
+    // Post image
     const modalImg = document.createElement('img');
     modalImg.src = post.post;
     modalImg.style.width = '100%'; 
     modalImg.style.height = 'auto'; 
     modalContent.appendChild(modalImg);
 
+    // Caption
     const modalCaption = document.createElement('p');
     modalCaption.textContent = post.caption || 'No caption';
     modalContent.appendChild(modalCaption);
 
+    // Comments Section
     const commentsDiv = document.createElement('div');
     commentsDiv.classList.add('comments');
+    
     if (post.comments && post.comments.length > 0) {
-        post.comments.forEach(comment => {
+        for (const commentObj of post.comments) {
             const commentDiv = document.createElement('div');
             commentDiv.classList.add('comment');
-            commentDiv.textContent = comment;
+
+            // Fetch the user data for the comment's userId
+            try {
+                const userDoc = await getDoc(doc(firestore, 'users', commentObj.userId));
+                const userData = userDoc.data();
+
+                // Displaying the comment author's name (bold)
+                const commentUser = document.createElement('strong');
+                commentUser.textContent = userData ? userData.username : 'Unknown User';
+                commentDiv.appendChild(commentUser);
+
+                // Adding some spacing between the username and comment
+                const space = document.createElement('span');
+                space.textContent = ': ';
+                commentDiv.appendChild(space);
+
+                // Displaying the comment text (smaller)
+                const commentText = document.createElement('p');
+                commentText.textContent = commentObj.comment; // Access the comment text
+                commentText.style.fontSize = '14px'; // Smaller font size for comment text
+                commentDiv.appendChild(commentText);
+
+            } catch (error) {
+                console.error('Error fetching user data for comment:', error);
+            }
+
             commentsDiv.appendChild(commentDiv);
-        });
+        }
     } else {
         const noComments = document.createElement('p');
         noComments.textContent = 'No comments yet.';
         commentsDiv.appendChild(noComments);
     }
+    
     modalContent.appendChild(commentsDiv);
+
+    // Likes Section (same as before)
+    const likesDiv = document.createElement('div');
+    likesDiv.classList.add('likes');
+    const likesCount = post.likes ? post.likes.length : 0;
+    likesDiv.textContent = `${likesCount} Like${likesCount !== 1 ? 's' : ''}`;
+    modalContent.appendChild(likesDiv);
 
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
@@ -161,6 +199,7 @@ function openPostModal(post) {
         }
     });
 }
+
 
 function closePostModal(modal) {
     document.body.removeChild(modal);
