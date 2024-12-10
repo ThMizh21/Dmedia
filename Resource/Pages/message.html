@@ -1,12 +1,17 @@
 <!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/@codingnepal -->
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="../css/profile.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+    <title>Dmedia</title>
+    <link rel="stylesheet" href="../css/upload.css">
+    <!-- Linking Google fonts for icons -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
 </head>
+
 <body>
     <aside class="sidebar">
         <!-- Sidebar header -->
@@ -33,28 +38,28 @@
                     <span class="nav-tooltip">Home</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="./discover.html" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">Search</span>
                         <span class="nav-label">Discover</span>
                     </a>
                     <span class="nav-tooltip">Discover</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="./message.html" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">Chat</span>
                         <span class="nav-label">Chat</span>
                     </a>
                     <span class="nav-tooltip">Chat</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="./upload.html" class="nav-link" id="upload1">
                         <span class="nav-icon material-symbols-rounded">upload</span>
                         <span class="nav-label">New</span>
                     </a>
                     <span class="nav-tooltip">New</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="./settings.html" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">settings</span>
                         <span class="nav-label">Settings</span>
                     </a>
@@ -62,51 +67,13 @@
                 </li>
             </ul>
 
-           </aside>
+           
+    </aside>
 
-
-    <!-- Profile Page -->
-    <section id="profile-container">
-        <div id="profile-header">
-            <button id="edit-profile-btn">Edit Profile</button>
-            <h2 id="username"></h2>
-            <img id="profile-img" src="" alt="Profile Picture">
-            <div id="follow-info">
-                <ul id="follow">
-                    <li><p>Followers: <span id="followers-count"></span></p> </li>
-                    <li> <p>Following: <span id="following-count"></span></p></li>
-                </ul>
-            </div>
-            <h1 id="name"></h1> <!-- Added Name here -->
-            <p id="bio"></p>
-        </div>
-
-
-        <div id="posts-section">
-            <h2>Posts</h2>
-            <div id="posts-grid"></div>
-        </div>
-        
-    </section>
-
-    <!-- Edit Profile Modal -->
-    <div id="edit-profile-modal">
-        <div id="edit-profile-form">
-            <label for="edit-name">Name:</label>
-            <input type="text" id="edit-name">
-            <label for="edit-username">Username:</label>
-            <input type="text" id="edit-username">
-            <label for="edit-bio">Bio:</label>
-            <textarea id="edit-bio"></textarea>
-            <label for="edit-profile-img">Change Profile Picture:</label>
-            <input type="file" id="edit-profile-img">
-            <button id="save-profile-btn">Save</button>
-            <button id="cancel-edit-btn">Cancel</button>
-        </div>
-    </div>
-
-    <script type="module" src="../script/profile.js"></script>
-    <script type="module" src="../script/home.js"></script>
-
+  
+    
 </body>
+<script type="module" src="../script/home.js"></script>
+<script type="module" src="../script/fetch.js"></script>    
+
 </html>

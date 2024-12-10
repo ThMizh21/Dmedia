@@ -1,12 +1,12 @@
 const sidebar = document.querySelector(".sidebar");
-const sidebarToggler = document.querySelector(".sidebar-toggler");
+const sidebarToggler = document.querySelector(".sidebar-toggler"); // Collapse button
 const menuToggler = document.querySelector(".menu-toggler");
-const logoFull = document.getElementById("logo-full");       
-const logoCollapsed = document.getElementById("logo-collapsed"); 
+const logoFull = document.getElementById("logo-full");
+const logoCollapsed = document.getElementById("logo-collapsed");
 
 // Ensure these heights match the CSS sidebar height values
-let collapsedSidebarHeight = "56px"; 
-let fullSidebarHeight = "calc(100vh - 32px)"; 
+let collapsedSidebarHeight = "56px";
+let fullSidebarHeight = "calc(100vh - 32px)";
 
 // Function to update logo visibility based on sidebar state
 const updateLogoVisibility = () => {
@@ -36,46 +36,22 @@ menuToggler.addEventListener("click", () => {
   toggleMenu(sidebar.classList.toggle("menu-active"));
 });
 
-// Adjust sidebar height and logo visibility on window resize
+// Adjust sidebar height, logo visibility, and collapse button visibility on window resize
 window.addEventListener("resize", () => {
-  if (window.innerWidth >= 1024) {
-    sidebar.style.height = fullSidebarHeight;
-    sidebar.classList.remove("collapsed"); // Ensure sidebar is fully open on larger screens
+  if (window.innerWidth > 920) {
+    sidebar.classList.remove("collapsed");  // Ensure sidebar is open on larger screens
+    sidebar.style.height = fullSidebarHeight; // Set height to full
     logoFull.style.display = "block";       // Show full logo
     logoCollapsed.style.display = "none";   // Hide collapsed logo
+    sidebarToggler.style.display = "none";  // Hide collapse button on larger screens
   } else {
-    sidebar.classList.remove("collapsed");
-    sidebar.style.height = "auto";
-    toggleMenu(sidebar.classList.contains("menu-active"));
-    updateLogoVisibility(); // Update logo visibility based on sidebar state
+    // Only collapse the sidebar on smaller screens (below 920px)
+    sidebar.style.height = collapsedSidebarHeight;
+    logoFull.style.display = "none";        // Hide full logo
+    logoCollapsed.style.display = "block";  // Show collapsed logo
+    sidebarToggler.style.display = "block"; // Show collapse button on smaller screens
   }
 });
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
-    authDomain: "dmedia-2c144.firebaseapp.com",
-    projectId: "dmedia-2c144",
-    storageBucket: "dmedia-2c144.appspot.com",
-    messagingSenderId: "636638599757",
-    appId: "1:636638599757:web:01c82ddff12b4d2ba45a04",
-    measurementId: "G-WSJN8XVXWJ"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-function logout() {
-    signOut(auth).then(() => {
-        console.log("User logged out");
-        window.location.href = "../../index.html"; // Adjust the path to your login page
-        localStorage.removeItem('uid');
-        localStorage.clear();
-    }).catch((error) => {
-        console.error("Logout error:", error);
-    });
-}
-
-window.logout = logout;
+// Call the resize function initially to set the correct visibility based on current window width
+window.dispatchEvent(new Event("resize"));
