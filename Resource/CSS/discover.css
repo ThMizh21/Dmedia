@@ -184,6 +184,11 @@ body {
     background: #fff;
 }
 
+main{
+  display: flex;
+  justify-content: center;
+}
+
 
 /* Responsive media query code for small screens */
 @media (max-width: 920px) {

@@ -124,7 +124,16 @@ function createCommentModal(postId, comments) {
       commentDiv.classList.add("comment");
 
       const commentText = document.createElement("p");
-      commentText.textContent = `${commentUserName}: ${comment}`;
+
+      // Create an anchor tag to link to the user's profile
+      const commentUserLink = document.createElement("a");
+      commentUserLink.href = `userprofile.html?username=${commentUserName}`;  // Link to profile page using username
+      commentUserLink.textContent = `${commentUserName}: `;
+      commentUserLink.classList.add("user-link");  // Optional: Add a class for styling
+
+      commentText.appendChild(commentUserLink);
+      commentText.appendChild(document.createTextNode(comment));
+
       commentDiv.appendChild(commentText);
 
       commentsContainer.appendChild(commentDiv);
@@ -136,6 +145,30 @@ function createCommentModal(postId, comments) {
   }
 
   modalContent.appendChild(commentsContainer);
+
+  // Add comment input and submit button
+  const commentInput = document.createElement("input");
+  commentInput.placeholder = "Write a comment...";
+  modalContent.appendChild(commentInput);
+
+  const submitCommentButton = document.createElement("button");
+  submitCommentButton.textContent = "Post Comment";
+  submitCommentButton.onclick = async () => {
+    const comment = commentInput.value.trim();
+    if (comment) {
+      // Add comment to Firestore
+      const postRef = doc(db, "posts", postId);
+      await updateDoc(postRef, {
+        comments: arrayUnion({
+          userId: currentUserId,
+          comment: comment
+        })
+      });
+      commentInput.value = ''; // clear input field
+      fetchPosts(); // Re-fetch posts to update comments
+    }
+  };
+  modalContent.appendChild(submitCommentButton);
 
   modal.appendChild(modalContent);
 
@@ -261,25 +294,10 @@ async function fetchPosts() {
         captionDiv.classList.add("caption");
         captionDiv.textContent = caption;
 
-        const commentsDiv = document.createElement("div");
-        commentsDiv.classList.add("comments");
-        if (comments && comments.length > 0) {
-          comments.forEach(async (commentData) => {
-            const userDetails = await getUserDetails(commentData.userId);
-            const commentUserName = userDetails ? userDetails.username : "Unknown user";
-            const commentDiv = document.createElement("div");
-            commentDiv.textContent = `${commentUserName}: ${commentData.comment}`;
-            commentsDiv.appendChild(commentDiv);
-          });
-        } else {
-          const noCommentsDiv = document.createElement("div");
-          noCommentsDiv.textContent = "No comments yet.";
-          commentsDiv.appendChild(noCommentsDiv);
-        }
+        // Remove comments section from here (comments div is no longer appended to cDDiv)
+        // commentsDiv is removed from the cDDiv
 
         cDDiv.appendChild(captionDiv);
-        cDDiv.appendChild(commentsDiv);
-
         postDiv.appendChild(cHeadDiv);
         postDiv.appendChild(visCDiv);
         postDiv.appendChild(cDDiv);
@@ -291,6 +309,7 @@ async function fetchPosts() {
     console.error("Error fetching posts:", error);
   }
 }
+
 
 // Toggle the like status of a post and update the icon
 async function toggleLikePost(postId, likes, likeIcon) {
@@ -308,6 +327,7 @@ async function toggleLikePost(postId, likes, likeIcon) {
     });
     likeIcon.style.color = "gray";  // Change icon to gray (unliked)
     console.log("Like removed from post:", postId);
+    
   } else {
     await updateDoc(postRef, {
       likes: arrayUnion(currentUserId),
@@ -335,22 +355,16 @@ async function savePost(postId, savedIcon) {
     const isPostSaved = savedPosts.includes(postId);
 
     if (isPostSaved) {
-      // Unsave the post
       await updateDoc(userRef, {
-        savedPosts: arrayRemove(postId)
+        savedPosts: arrayRemove(postId),
       });
-      savedIcon.style.color = "gray"; // Change icon to gray (unsaved)
-      console.log("Post unsaved:", postId);
+      savedIcon.style.color = "gray"; // Change icon color to gray (unsaved)
     } else {
-      // Save the post
       await updateDoc(userRef, {
-        savedPosts: arrayUnion(postId)
+        savedPosts: arrayUnion(postId),
       });
-      savedIcon.style.color = "black"; // Change icon to black (saved)
-      console.log("Post saved:", postId);
+      savedIcon.style.color = "black"; // Change icon color to black (saved)
     }
   }
-
-  // Re-fetch posts to update the saved status
-  fetchPosts();
 }
+
