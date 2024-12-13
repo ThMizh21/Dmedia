@@ -79,7 +79,7 @@ form.addEventListener("submit", function (event) {
     }
 
     // Validate password (length, number, special character, uppercase)
-    const passwordPattern = /^(?=.*\d)(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/;
+    const passwordPattern = /^(?=.*\d)(?=.*[A-Z])(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,12}$/;
     if (!passwordPattern.test(password.value)) {
         formIsValid = false;
         passwordError.textContent = "Password must be 8-12 characters, include at least one number, one uppercase letter, and one special character!";
@@ -97,8 +97,8 @@ form.addEventListener("submit", function (event) {
             .then((userCredential) => {
                 const user = userCredential.user;
                 const userData = {
-                    Name: name.value,
-                    userName: username.value,
+                    name: name.value,
+                    username: username.value,
                     email: email.value
                 };
 

@@ -10,9 +10,9 @@ font-size: 12px;
 }
 
 .eye-icon {
-    position: absolute;
-    right: 10px;
-    top: 75%;
+    position: relative;
+    left: 290px;
+    top: -27px;
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 18px;
@@ -175,7 +175,7 @@ font-size: 12px;
     img{
         width: 150px;
         height: 50px;
-        margin-top: 170px;
+        margin-top: 60px;
         margin-left: 650px;
         
     }
