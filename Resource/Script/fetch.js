@@ -222,7 +222,7 @@ async function fetchPosts() {
         const userNameDiv = document.createElement("a");
         userNameDiv.classList.add("userName");
         userNameDiv.textContent = username;
-        userNameDiv.href = "userprofile.html"
+        userNameDiv.href = `userprofile.html?username=${username}`;
         userNameDiv.style.textDecoration = "none"
 
         cHeadDiv.appendChild(userImg);
