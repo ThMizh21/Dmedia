@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
 
 // Your Firebase configuration
@@ -13,6 +13,7 @@ const firebaseConfig = {
     appId: "1:636638599757:web:01c82ddff12b4d2ba45a04",
     measurementId: "G-WSJN8XVXWJ"
 };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -23,6 +24,7 @@ const storage = getStorage(app);
 const postForm = document.getElementById('postForm');
 const fileInput = document.getElementById('file');
 const captionInput = document.getElementById('caption');
+const hashtagInput = document.getElementById("hashtags");
 
 // Submit the post form
 postForm.addEventListener('submit', async (event) => {
@@ -30,9 +32,10 @@ postForm.addEventListener('submit', async (event) => {
 
     const file = fileInput.files[0];
     const caption = captionInput.value;
+    const hashtagsInput = hashtagInput.value;  // Get the hashtag input
     const user = auth.currentUser; // Get the logged-in user
 
-    if (!file || !caption || !user) {
+    if (!file || !caption || !user || !hashtagsInput) {
         alert('All fields are required!');
         return;
     }
@@ -55,13 +58,24 @@ postForm.addEventListener('submit', async (event) => {
             throw new Error('Failed to upload image/video to Cloudinary');
         }
 
-        // 2. Save post data to Firestore
+        // 2. Extract hashtags from the input field
+        const hashtags = hashtagsInput
+            .split(/\s+/)  // Split by spaces to get individual hashtag-like words
+            .map(tag => tag.trim())  // Trim spaces around the tags
+            .filter(tag => tag.startsWith('#')); // Only keep hashtags that start with #
+
+        // 3. Get current timestamp for date_of_post (using Firestore's Timestamp)
+        const date_of_post = Timestamp.now();  // Firestore Timestamp
+
+        // 4. Save post data to Firestore
         const postData = {
             userId: user.uid,
             caption,
             post: data.secure_url, // Cloudinary URL of the uploaded file
             timestamp: serverTimestamp(), // Firestore server timestamp
             likes: [],
+            hashtags: hashtags,  // Store the hashtags in the array
+            date_of_post: date_of_post // Store Firestore timestamp for the post
         };
 
         // Add post to Firestore
