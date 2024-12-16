@@ -16,91 +16,91 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('search-bar');
-    const resultsContainer = document.getElementById('results-container');
+// Event listener for input change
+const searchInput = document.getElementById('search-bar');
+const resultsContainer = document.getElementById('results-container');
 
-    // Event listener for input change
-    searchInput.addEventListener('input', searchUsersAndPosts);
+searchInput.addEventListener('input', searchUsersAndPosts);
 
-    // Function to search users and posts based on input
-    async function searchUsersAndPosts() {
-        const queryValue = searchInput.value.trim(); // Get the value from the input
-        if (queryValue === '') {
-            resultsContainer.innerHTML = ''; // Clear results if input is empty
+async function searchUsersAndPosts() {
+    const queryValue = searchInput.value.trim();
+
+    // Clear previous results
+    resultsContainer.innerHTML = '';
+    if (!queryValue) return;
+
+    if (queryValue.startsWith('#')) {
+        await searchPosts(queryValue);
+    } else {
+        await searchUsers(queryValue);
+    }
+}
+
+// Function to search users by username or name
+async function searchUsers(queryValue) {
+    const usersRef = collection(db, 'users');
+    const userQuery = query(usersRef,
+        where('username', '>=', queryValue),
+        where('username', '<=', queryValue + '\uf8ff') // For partial matching
+    );
+
+    try {
+        const snapshot = await getDocs(userQuery);
+        if (snapshot.empty) {
+            resultsContainer.innerHTML += '<p>No users found.</p>';
             return;
         }
 
-        // Clear previous results
-        resultsContainer.innerHTML = '';
-
-        // Determine if the query is a username or a hashtag
-        if (queryValue.startsWith('#')) {
-            await searchPosts(queryValue); // Search for posts with the hashtag
-        } else {
-            await searchUsers(queryValue); // Search for users by username
-        }
-    }
-
-    // Function to search for users by username
-    async function searchUsers(queryValue) {
-        const usersRef = collection(db, 'users'); // Reference to the 'users' collection
-        const userQuery = query(usersRef, where('username', '==', queryValue)); // Query to match the username
-
-        try {
-            const snapshot = await getDocs(userQuery); // Execute query
-            if (snapshot.empty) {
-                resultsContainer.innerHTML += '<p>No users found.</p>';
-                return;
-            }
-
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                const userElement = document.createElement('div');
-                userElement.classList.add('user-item');
-                userElement.innerHTML = `    
-                    <div class="username">
-                        <a href="./profile.html?username=${data.username}">${data.username}</a>
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const userElement = document.createElement('div');
+            userElement.classList.add('user-item');
+            userElement.innerHTML = `
+                <a href="./userprofile.html?username=${data.username}">
+                    <div class="user-box">
+                        <img src="${data.profile || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg'}" alt="Profile Image" class="profile-image">
+                        <div class="user-info">
+                            <p class="username">${data.username}</p>
+                            <p class="name">${data.name}</p>
+                        </div>
                     </div>
-                    <div class="user-bio">${data.bio || 'No bio available.'}</div>
-                `;
-                resultsContainer.appendChild(userElement); // Append user result
-            });
-        } catch (error) {
-            console.error('Error fetching users:', error);
-        }
+                </a>
+            `;
+            resultsContainer.appendChild(userElement); // Append user result
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
     }
+}
 
-    // Function to search for posts with a specific hashtag
-    async function searchPosts(queryValue) {
-        const hashtag = queryValue.substring(1); // Remove '#' character
-        const postsRef = collection(db, 'posts'); // Reference to the 'posts' collection
-        const postQuery = query(postsRef, where('caption', 'array-contains', hashtag)); // Query to find posts with the hashtag
+async function searchPosts(queryValue) {
+    const hashtag = queryValue.trim(); // Make the query case-insensitive
+    const postsRef = collection(db, 'posts');
+    
+    try {
+        // Query posts where the hashtags field contains the hashtag
+        const postQuery = query(postsRef, where("hashtags", "array-contains", `#${hashtag}`));
+        const snapshot = await getDocs(postQuery);
 
-        try {
-            const snapshot = await getDocs(postQuery); // Execute query
-            if (snapshot.empty) {
-                resultsContainer.innerHTML += '<p>No posts found with this hashtag.</p>';
-                return;
-            }
+        if (snapshot.empty) {
+            resultsContainer.innerHTML += '<p>No posts found with this hashtag.</p>';
+            return;
+        }
 
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                const postElement = document.createElement('div');
-                postElement.classList.add('post-item');
-                postElement.innerHTML = `
-                    <div class="username">
-                        <a href="./profile.html?username=${data.username}">${data.username}</a>
-                    </div>
+        // Display matching posts
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const postElement = document.createElement('div');
+            postElement.classList.add('post-item');
+            postElement.innerHTML = `
+                <div class="post-box">
+                    <img src="${data.post || 'default-image.jpg'}" alt="Post Image" class="post-image">
                     <div class="post-caption">${data.caption}</div>
-                    <div class="post-image">
-                        <img src="${data.imageUrl}" alt="Post Image" />
-                    </div>
-                `;
-                resultsContainer.appendChild(postElement); // Append post result
-            });
-        } catch (error) {
-            console.error('Error fetching posts:', error);
-        }
+                </div>
+            `;
+            resultsContainer.appendChild(postElement); // Append post result
+        });
+    } catch (error) {
+        console.error('Error searching posts:', error);
     }
-});
+}

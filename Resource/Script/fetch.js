@@ -176,6 +176,7 @@ function createCommentModal(postId, comments) {
 }
 
 // Function to fetch posts
+// Function to fetch posts
 async function fetchPosts() {
   if (!currentUserId) return; // Ensure user is logged in before fetching posts
 
@@ -194,7 +195,7 @@ async function fetchPosts() {
 
     querySnapshot.forEach(async (doc) => {
       const postData = doc.data();
-      const { userId, post, comments, likes, date_of_post, caption } = postData;
+      const { userId, post, comments, likes, date_of_post, caption, hashtags } = postData;
 
       if (!userId) {
         console.log("Skipping post with missing userId");
@@ -218,9 +219,11 @@ async function fetchPosts() {
         userImg.alt = `${username}'s profile image`;
         userImg.classList.add("userPrf");
 
-        const userNameDiv = document.createElement("div");
+        const userNameDiv = document.createElement("a");
         userNameDiv.classList.add("userName");
         userNameDiv.textContent = username;
+        userNameDiv.href = "userprofile.html"
+        userNameDiv.style.textDecoration = "none"
 
         cHeadDiv.appendChild(userImg);
         cHeadDiv.appendChild(userNameDiv);
@@ -294,10 +297,34 @@ async function fetchPosts() {
         captionDiv.classList.add("caption");
         captionDiv.textContent = caption;
 
-        // Remove comments section from here (comments div is no longer appended to cDDiv)
-        // commentsDiv is removed from the cDDiv
+        // Display hashtags if present
+        const hashtagDiv = document.createElement("div");
+        hashtagDiv.classList.add("hashtags");
+        if (hashtags && hashtags.length > 0) {
+          hashtags.forEach((hashtag) => {
+            const hashtagSpan = document.createElement("span");
+            hashtagSpan.classList.add("hashtag");
+            hashtagSpan.textContent = `${hashtag}`;
+            hashtagDiv.appendChild(hashtagSpan);
+            hashtagDiv.style.fontSize ="16px"
+            hashtagDiv.style.paddingBottom ="10px"
+          });
+        }
+
+        // Format and display the date of the post
+        const dateDiv = document.createElement("div");
+        dateDiv.classList.add("post-date");
+        if (date_of_post) {
+          const postDate = new Date(date_of_post.seconds * 1000); // Firestore timestamp conversion
+          const formattedDate = postDate.toLocaleString(); // Format as desired
+          dateDiv.textContent = formattedDate;
+          dateDiv.style.color ="grey"
+        }
 
         cDDiv.appendChild(captionDiv);
+        cDDiv.appendChild(hashtagDiv);
+        cDDiv.appendChild(dateDiv);  // Append date of post
+
         postDiv.appendChild(cHeadDiv);
         postDiv.appendChild(visCDiv);
         postDiv.appendChild(cDDiv);
@@ -309,6 +336,7 @@ async function fetchPosts() {
     console.error("Error fetching posts:", error);
   }
 }
+
 
 
 // Toggle the like status of a post and update the icon
@@ -367,4 +395,3 @@ async function savePost(postId, savedIcon) {
     }
   }
 }
-

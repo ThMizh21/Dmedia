@@ -1,63 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
+    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
 </head>
-
 <body>
-    <main>
-        <div id="user-profile">
-            <h1 id="username"></h1>
-            <div id="user-posts"></div>
+    <aside class="sidebar">
+        <!-- Sidebar header -->
+        <header class="sidebar-header">
+            <a href="#" class="header-logo">
+                <img id="logo-full" src="../images/logo_white.png" alt="Collapsed Logo">
+            </a>
+            <button class="toggler sidebar-toggler">
+                <span class="material-symbols-rounded">chevron_left</span>
+            </button>
+            <button class="toggler menu-toggler">
+                <span class="material-symbols-rounded">menu</span>
+            </button>
+        </header>
+
+        <nav class="sidebar-nav">
+            <!-- Primary top nav -->
+            <ul class="nav-list primary-nav">
+                <li class="nav-item">
+                    <a href="./home.html" class="nav-link">
+                        <span class="nav-icon material-symbols-rounded">Home</span>
+                        <span class="nav-label">Home</span>
+                    </a>
+                    <span class="nav-tooltip">Home</span>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon material-symbols-rounded">Search</span>
+                        <span class="nav-label">Discover</span>
+                    </a>
+                    <span class="nav-tooltip">Discover</span>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon material-symbols-rounded">Chat</span>
+                        <span class="nav-label">Chat</span>
+                    </a>
+                    <span class="nav-tooltip">Chat</span>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon material-symbols-rounded">upload</span>
+                        <span class="nav-label">New</span>
+                    </a>
+                    <span class="nav-tooltip">New</span>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon material-symbols-rounded">settings</span>
+                        <span class="nav-label">Settings</span>
+                    </a>
+                    <span class="nav-tooltip">Settings</span>
+                </li>
+            </ul>
+
+           </aside>
+
+
+    <!-- Profile Page -->
+    <section id="profile-container">
+        <div id="profile-header">
+            <h2 id="username"></h2>
+            <img id="profile-img" src="" alt="Profile Picture">
+            <div id="follow-info">
+                <ul id="follow">
+                    <li><p>Followers: <span id="followers-count"></span></p> </li>
+                    <li> <p>Following: <span id="following-count"></span></p></li>
+                </ul>
+                <ul>
+                    <li><button>follow</button></li>
+                    <li><button>Message</button></li>
+                </ul>
+            </div>
+            <h1 id="name"></h1> <!-- Added Name here -->
+            <p id="bio"></p>
         </div>
-    </main>
 
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
 
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        <div id="posts-section">
+            <h2>Posts</h2>
+            <div id="posts-grid"></div>
+        </div>
+        
+    </section>
 
-        // Extract username from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const username = urlParams.get('username');
+    </div>
 
-        // Display the username
-        document.getElementById('username').textContent = username;
+    <!-- <script type="module" src="../script/profile.js"></script> -->
+    <script type="module" src="../script/home.js"></script>
 
-        // Fetch and display the user's posts
-        db.collection('posts')
-            .where('username', '==', username)
-            .get()
-            .then(snapshot => {
-                const userPostsContainer = document.getElementById('user-posts');
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const postElement = document.createElement('div');
-                    postElement.classList.add('post-item');
-                    postElement.innerHTML = `
-                        <div class="post-caption">${data.caption}</div>
-                        <div class="post-image">
-                            <img src="${data.imageUrl}" alt="Post Image" />
-                        </div>
-                    `;
-                    userPostsContainer.appendChild(postElement);
-                });
-            })
-            .catch(error => console.error("Error fetching user posts: ", error));
-    </script>
 </body>
 </html>
-
