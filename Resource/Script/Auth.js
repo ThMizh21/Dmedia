@@ -1,6 +1,6 @@
 // Redirect if already logged in
 if (localStorage.getItem("uid")) {
-    window.location.href = "./html/home.html"; // Redirect to home page
+    window.location.href = "./resource/pages/home.html"; // Redirect to home page
 }
 
 const form = document.getElementById("signupForm");
