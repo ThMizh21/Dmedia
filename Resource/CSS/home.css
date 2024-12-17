@@ -381,6 +381,10 @@ body {
   color: black;
 }
 
+#signOut{
+  border: 1px solid transparent;
+  background-color: #608bc1;
+}
 
 @media (max-width: 920px) {
   .sidebar {

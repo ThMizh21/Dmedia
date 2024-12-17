@@ -47,7 +47,7 @@ onAuthStateChanged(auth, (user) => {
         currentUserUid = user.uid;
         loadUserProfile(currentUserUid);
     } else {
-        window.location.href = 'login.html'; // Redirect to login if not authenticated
+        window.location.href = '../../index.html'; // Redirect to login if not authenticated
     }
 });
 

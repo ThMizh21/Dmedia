@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -34,7 +34,7 @@ onAuthStateChanged(auth, (user) => {
   } else {
     currentUserId = null; // No user logged in
     console.log("No user logged in");
-    window.location.href = "login.html";  // Redirect to login page if not authenticated
+    window.location.href = "../../index.html";  // Redirect to login page if not authenticated
   }
 });
 
@@ -394,4 +394,21 @@ async function savePost(postId, savedIcon) {
       savedIcon.style.color = "black"; // Change icon color to black (saved)
     }
   }
+}
+
+// Logout Functionality
+const logoutButton = document.getElementById("signOut");
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out successfully.");
+        localStorage.removeItem("uid");  // Optionally clear local storage if used
+        window.location.href = "../../index.html"; // Redirect to login page
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
+  });
 }
