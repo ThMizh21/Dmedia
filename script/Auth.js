@@ -1,5 +1,5 @@
 if (localStorage.getItem("uid")) {
-    window.location.href = "./resource/pages/home.html"; // Redirect to home page
+    window.location.href = "./pages/home.html"; // Redirect to home page
 }
 const form = document.getElementById("signupForm");
 const name = document.getElementById("name");
@@ -114,7 +114,7 @@ form.addEventListener("submit", function (event) {
                     .then(() => {
                         showMessage("Account Created Successfully", 'signUpMessage');
                         form.reset(); // Reset the form after successful submission
-                        window.location.href = "resource/pages/home.html";
+                        window.location.href = "pages/home.html";
                     })
                     .catch((error) => {
                         console.error("Error writing document:", error);
@@ -144,7 +144,7 @@ signIn.addEventListener('click', (event) => {
             showMessage('Login is successful', 'signInMessage');
             const user = userCredential.user;
             localStorage.setItem('loggedInUserId', user.uid);
-            window.location.href = "resource/pages/home.html";
+            window.location.href = "pages/home.html";
         })
         .catch((error) => {
             const errorCode = error.code;

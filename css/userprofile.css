@@ -339,9 +339,23 @@ body {
   width: 100%;
 }
 
+.no-posts-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  font-size: 1.5em;
+  color: #555;
+  text-align: center;
+  font-weight: bold;
+}
 
-
-
+/* Add this to your styles to align the icons side by side */
+.likes, .saved {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
 /* Responsive media query code for small screens */
 @media (max-width: 920px) {
