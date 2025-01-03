@@ -1,5 +1,5 @@
 if (localStorage.getItem("uid")) {
-    window.location.href = "./resource/pages/home.html"; // Redirect to home page
+    window.location.href = "./pages/home.html"; // Redirect to home page
 }
 const form = document.getElementById("signupForm");
 const name = document.getElementById("name");

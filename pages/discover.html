@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - youtube.com/@codingnepal -->
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dmedia</title>
-    <link rel="stylesheet" href="../css/upload.css">
+    <link rel="stylesheet" href="../css/discover.css">
     <!-- Linking Google fonts for icons -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -17,7 +17,7 @@
         <!-- Sidebar header -->
         <header class="sidebar-header">
             <a href="#" class="header-logo">
-                <img id="logo-full" src="../images/logo_white.png" alt="Collapsed Logo">
+                <img id="logo-full" src="../assets/images/logo_white.png" alt="Collapsed Logo">
             </a>
             <button class="toggler sidebar-toggler">
                 <span class="material-symbols-rounded">chevron_left</span>
@@ -38,69 +38,45 @@
                     <span class="nav-tooltip">Home</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" >
+                    <a href="./discover.html" class="nav-link" id="discover">
                         <span class="nav-icon material-symbols-rounded">Search</span>
                         <span class="nav-label">Discover</span>
                     </a>
                     <span class="nav-tooltip">Discover</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="./message.html" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">Chat</span>
                         <span class="nav-label">Chat</span>
                     </a>
                     <span class="nav-tooltip">Chat</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" id="upload1">
+                    <a href="./upload.html" class="nav-link" id="upload1">
                         <span class="nav-icon material-symbols-rounded">upload</span>
                         <span class="nav-label">New</span>
                     </a>
                     <span class="nav-tooltip">New</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon material-symbols-rounded">settings</span>
-                        <span class="nav-label">Settings</span>
+                    <a href="./saved.html" class="nav-link">
+                        <span class="nav-icon material-symbols-rounded">bookmark</span>
+                        <span class="nav-label">Saved</span>
                     </a>
-                    <span class="nav-tooltip">Settings</span>
+                    <span class="nav-tooltip">Saved</span>
                 </li>
             </ul>
-
-           
+        </nav>
     </aside>
-<main>
 
-    
-    <form id="postForm">
-        <h1>Create a Post</h1>
-        <!-- File input for image/video -->
-        <label for="file" class="file-label">
-            <span class="material-symbols-rounded">add</span>
-        </label>
-        <input type="file" id="file" name="file" accept="image/*,video/*" required style="display:none;">
-        <br>
-        <!-- Input for caption -->
-        <label for="caption">Caption</label><br>
-        <textarea id="caption" name="caption" rows="4" cols="50" required></textarea><br><br>
-        <label for="hashtags">Hashtags</label><br>
-        <textarea id="hashtags" name="hashtags" rows="4" cols="50" required></textarea><br><br>
+    <main>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search for a user or post..." oninput="searchUsersAndPosts()">
+        </div>
+        <div id="results-container" class="posts-grid"></div>
+    </main>
 
-        <button type="submit">Post</button>
-    </form>
-</main>
-
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js"></script>
-
-    <script src="upload.js"></script>
-
-  
-    
+    <script type="module" src="../script/discover.js"></script> <!-- Link the JS file -->
 </body>
-<script type="module" src="../script/home.js"></script>
-<script type="module" src="../script/upload.js"></script>    
 
 </html>

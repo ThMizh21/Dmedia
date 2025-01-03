@@ -1,17 +1,14 @@
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - youtube.com/@codingnepal -->
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dmedia</title>
-    <link rel="stylesheet" href="../css/upload.css">
-    <!-- Linking Google fonts for icons -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
-</head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
+</head>
 <body>
     <aside class="sidebar">
         <!-- Sidebar header -->
@@ -38,28 +35,28 @@
                     <span class="nav-tooltip">Home</span>
                 </li>
                 <li class="nav-item">
-                    <a href="./discover.html" class="nav-link">
+                    <a href="#" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">Search</span>
                         <span class="nav-label">Discover</span>
                     </a>
                     <span class="nav-tooltip">Discover</span>
                 </li>
                 <li class="nav-item">
-                    <a href="./message.html" class="nav-link">
+                    <a href="#" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">Chat</span>
                         <span class="nav-label">Chat</span>
                     </a>
                     <span class="nav-tooltip">Chat</span>
                 </li>
                 <li class="nav-item">
-                    <a href="./upload.html" class="nav-link" id="upload1">
+                    <a href="#" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">upload</span>
                         <span class="nav-label">New</span>
                     </a>
                     <span class="nav-tooltip">New</span>
                 </li>
                 <li class="nav-item">
-                    <a href="./settings.html" class="nav-link">
+                    <a href="#" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">settings</span>
                         <span class="nav-label">Settings</span>
                     </a>
@@ -67,13 +64,41 @@
                 </li>
             </ul>
 
-           
-    </aside>
+           </aside>
 
-  
-    
+
+    <!-- Profile Page -->
+    <section id="profile-container">
+        <div id="profile-header">
+            <h2 id="username"></h2>
+            <img id="profile-img" src="" alt="Profile Picture">
+            <div id="follow-info">
+                <ul id="follow">
+                    <li><p>Followers: <span id="followers-count"></span></p> </li>
+                    <li> <p>Following: <span id="following-count"></span></p></li>
+                </ul>
+                <ul>
+                    <li><button>follow</button></li>
+                    <li><a href="./message.html">Message</a></li>
+                </ul>
+            </div>
+            <h1 id="name"></h1> <!-- Added Name here -->
+            <p id="bio"></p>
+        </div>
+
+
+        <div id="posts-section">
+            <h2>Posts</h2>
+            <div id="posts-grid"></div>
+        </div>
+        
+    </section>
+
+    </div>
+
+    <!-- <script type="module" src="../script/profile.js"></script> -->
+    <script type="module" src="../script/home.js"></script>
+    <script type="module" src="../script/userprofile.js"></script>
+
 </body>
-<script type="module" src="../script/home.js"></script>
-<script type="module" src="../script/fetch.js"></script>    
-
 </html>

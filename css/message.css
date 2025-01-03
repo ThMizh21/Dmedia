@@ -1,4 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  
+  #messageBox {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  #messageInput {
+    padding: 10px;
+    margin: 10px 0;
+    width: 300px;
+    height: 100px;
+  }
+  
+  button {
+    padding: 10px;
+    width: 100px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .message {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #e3e3e3;
+    border-radius: 5px;
+  }
+  
+  .received {
+    background-color: #d1e7dd;
+  }
+  
+  .sent {
+    background-color: #cfe2ff;
+  }
+  
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 * {
   margin: 0;
@@ -384,6 +432,7 @@ body {
 #signOut{
   border: 1px solid transparent;
   background-color: #608bc1;
+  width: 20px;
 }
 
 @media (max-width: 920px) {
@@ -454,22 +503,24 @@ body {
     margin-top: 100px;
   }
 
+
+
   .post {
     display: grid;
     grid-template-rows: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive layout */
-    /* width: px; */
+    width: 400px;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
-  
-  
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-top: 50px;
+    border-radius: 15px;
   }
 
   .cHead{
     background-color: white;
     height: 10vh;
-    width: 380px;
+    width: 390px;
     margin-top: -220px;}
   
      .userName{
@@ -479,13 +530,13 @@ body {
     .visC {
       box-sizing: border-box;
       height: 450px; /* Adjust height as needed */
-      width: 380px;  /* Adjust width as needed */
+      width: 390px;  /* Adjust width as needed */
       background-color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden; /* Ensures content doesn't overflow the container */
-      margin-top: -218px;
+      margin-left: 5px;
     }
     
     .visC img, 
@@ -499,7 +550,7 @@ body {
   .cD{
     background-color: white;
     height: 20vh;
-    width: 95vw;
+    width: 390px;
   
   }
   /* Styling for Like and Save icons */

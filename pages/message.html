@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - youtube.com/@codingnepal -->
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dmedia</title>
-    <link rel="stylesheet" href="../css/home.css">
-    <!-- Linking Google fonts for icons -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="../css/upload.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+       
 </head>
 
 <body>
@@ -18,7 +16,7 @@
         <!-- Sidebar header -->
         <header class="sidebar-header">
             <a href="#" class="header-logo">
-                <img id="logo-full" src="../images/logo_white.png" alt="Collapsed Logo">
+                <img id="logo-full" src="../assets/images/logo_white.png" alt="Collapsed Logo">
             </a>
             <button class="toggler sidebar-toggler">
                 <span class="material-symbols-rounded">chevron_left</span>
@@ -53,51 +51,39 @@
                     <span class="nav-tooltip">Chat</span>
                 </li>
                 <li class="nav-item">
-                    <a href="./upload.html" class="nav-link">
+                    <a href="./upload.html" class="nav-link" id="upload1">
                         <span class="nav-icon material-symbols-rounded">upload</span>
                         <span class="nav-label">New</span>
                     </a>
                     <span class="nav-tooltip">New</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="./settings.html" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">bookmark</span>
-                        <span class="nav-label">saved</span>
+                        <span class="nav-label">Saved</span>
                     </a>
-                    <span class="nav-tooltip">saved</span>
+                    <span class="nav-tooltip">Saved</span>
                 </li>
             </ul>
 
-            <!-- Secondary bottom nav -->
-            <ul class="nav-list secondary-nav">
-                <li class="nav-item">
-                    <a href="./profile.html" class="nav-link">
-                        <span class="nav-icon material-symbols-rounded">account_circle</span>
-                        <span class="nav-label">Profile</span>
-                    </a>
-                    <span class="nav-tooltip">Profile</span>
-                </li>
-                <li class="nav-item">
-                    <button onclick="signOut()" id="signOut" href="#" class="nav-link">
-                        <span class="nav-icon material-symbols-rounded">logout</span>
-                        <span class="nav-label">Logout</span>
-                    </button>
-                    <span class="nav-tooltip">Logout</span>
-                </li>
-            </ul>
-        </nav>
+           
     </aside>
+    <main>
 
-    <main id="postContainer">
-        
+        <h2>Messages</h2>
+        <div id="messagesContainer"></div>
+        <!-- Message Input Section -->
+        <div id="messageBox">
+          <textarea id="messageInput" placeholder="Write your message here..."></textarea>
+          <button id="sendMessageButton">Send Message</button>
+        </div>
+      
+      
     </main>
-
-    <!-- Script -->
-    
-    
+  
     
 </body>
 <script type="module" src="../script/home.js"></script>
-<script type="module" src="../script/fetch.js"></script>    
+<script type="module" src="../script/message.js"></script>    
 
 </html>

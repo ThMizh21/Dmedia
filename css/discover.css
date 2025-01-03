@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+
 * {
   margin: 0;
   padding: 0;
@@ -231,21 +232,91 @@ main{
   font-weight: bold;
 }
 
+/* Add styles for the grid container */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.post-item {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
 .post-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .post-image {
   width: 100%;
-  max-width: 500px;
+  height: 200px;
+  object-fit: cover;
 }
 
 .post-caption {
+  padding: 10px;
+  font-size: 16px;
+  color: #333;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Modal styling */
+.post-modal {
+  position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  max-height: 80%;
+  overflow-y: auto;
+}
+
+.post-modal img {
+  width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.comments {
+  margin-top: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.comment {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.comment strong {
+  font-weight: bold;
+}
+
+.likes {
   margin-top: 10px;
   font-size: 16px;
 }
+
 
 
 /* Responsive media query code for small screens */

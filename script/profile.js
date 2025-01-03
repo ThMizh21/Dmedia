@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, doc, getDoc, updateDoc, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
 
-// Your Firebase configuration
+// Firebase initialization
 const firebaseConfig = {
     apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
     authDomain: "dmedia-2c144.firebaseapp.com",
@@ -15,13 +15,12 @@ const firebaseConfig = {
     measurementId: "G-WSJN8XVXWJ"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 const storage = getStorage(app);
 
-// Get references to the DOM elements
+// DOM references
 const profileImg = document.getElementById('profile-img');
 const nameElement = document.getElementById('name');
 const usernameElement = document.getElementById('username');
@@ -37,6 +36,9 @@ const editNameInput = document.getElementById('edit-name');
 const editUsernameInput = document.getElementById('edit-username');
 const editBioInput = document.getElementById('edit-bio');
 const editProfileImgInput = document.getElementById('edit-profile-img');
+
+// Button for messaging (targeting this user's UID)
+const messageButton = document.getElementById('messageButton');  // Assume this is the button in your profile page
 
 // Current User's UID
 let currentUserUid = null;
@@ -58,7 +60,6 @@ async function loadUserProfile(uid) {
         const userDoc = await getDoc(doc(firestore, 'users', uid));
         if (userDoc.exists()) {
             const userData = userDoc.data();
-            // Check if there's a profile image, otherwise use default
             const profileImageUrl = userData.profile || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg';
             profileImg.src = profileImageUrl;
             nameElement.textContent = userData.name || 'No Name';
@@ -66,6 +67,16 @@ async function loadUserProfile(uid) {
             bioElement.textContent = userData.bio || ''; 
             followersCount.textContent = userData.followersCount || 0;
             followingCount.textContent = userData.followingCount || 0;
+
+            // Dynamically add a message button
+            // Assuming the "messageButton" is dynamically added to the profile page:
+            if (messageButton) {
+                // Set message button to redirect to message.html with this user's UID
+                messageButton.addEventListener('click', () => {
+                    // Redirect to message page with targeted user UID
+                    window.location.href = `message.html?uid=${uid}`;
+                });
+            }
 
             // Load user posts
             loadUserPosts(uid);
@@ -109,7 +120,6 @@ async function loadUserPosts(uid) {
                     postDiv.appendChild(postImg);
                 }
 
-                // Removed post description display (no text below the image)
                 postsGrid.appendChild(postDiv); // Append the post to the grid
             });
         }
@@ -118,7 +128,6 @@ async function loadUserPosts(uid) {
     }
 }
 
-// Function to open the post details modal
 // Function to open the post details modal
 async function openPostModal(post) {
     const modal = document.createElement('div');
@@ -220,7 +229,6 @@ editProfileBtn.addEventListener('click', async () => {
 });
 
 // Save Edited Profile
-// Save Edited Profile
 saveProfileBtn.addEventListener('click', async () => {
     const newName = editNameInput.value;
     const newUsername = editUsernameInput.value;
@@ -238,46 +246,41 @@ saveProfileBtn.addEventListener('click', async () => {
             const formData = new FormData();
             formData.append('file', profileImgFile);
             formData.append('upload_preset', 'ml_default');  // Your Cloudinary upload preset
-            formData.append('cloud_name', 'dzyypiqod'); // Cloudinary cloud name (change if necessary)
+            formData.append('cloud_name', 'dzyypiqod'); // Cloudinary account name
 
-            // Upload the file to Cloudinary
-            const res = await fetch('https://api.cloudinary.com/v1_1/dzyypiqod/image/upload', {
+            // Upload the file to Cloudinary (adjust this code to use your Cloudinary API)
+            const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dzyypiqod/upload', {
                 method: 'POST',
-                body: formData
+                body: formData,
             });
 
-            const data = await res.json();  // Parse the response from Cloudinary
-
-            // Log the response for debugging
-            console.log('Cloudinary response:', data);
-
-            // If Cloudinary returns a secure_url, assign it to profileImageUrl
-            if (data.secure_url) {
-                profileImageUrl = data.secure_url;
-            } else {
-                throw new Error('Cloudinary upload failed. Response: ' + JSON.stringify(data));
-            }
-        } else {
-            // If no new image is selected, use the default profile image URL
-            profileImageUrl = 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733319438/download_4_edqwjy.jpg';
+            const data = await uploadResponse.json();
+            profileImageUrl = data.secure_url;
         }
 
-        // Ensure profileImageUrl is valid
-        if (!profileImageUrl) {
-            throw new Error('Profile image URL is undefined or invalid');
-        }
-
-        // Update Firestore with new profile data, including profile image URL
+        // Update user document in Firestore with new profile information
         await updateDoc(doc(firestore, 'users', currentUserUid), {
             name: newName,
             username: newUsername,
             bio: newBio,
-            profile: profileImageUrl // Save the Cloudinary URL
+            profile: profileImageUrl || null,
         });
 
-        loadUserProfile(currentUserUid); // Reload the profile to reflect changes
-        editProfileModal.style.display = 'none'; // Close the modal
+        // Update UI with new profile data
+        profileImg.src = profileImageUrl || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg';
+        nameElement.textContent = newName;
+        usernameElement.textContent = newUsername;
+        bioElement.textContent = newBio;
+
+        // Close the modal
+        editProfileModal.style.display = 'none';
+
     } catch (error) {
-        console.error('Error saving profile: ', error);
+        console.error('Error saving profile changes:', error);
     }
+});
+
+// Cancel Edit Profile
+cancelEditBtn.addEventListener('click', () => {
+    editProfileModal.style.display = 'none';
 });

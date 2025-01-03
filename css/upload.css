@@ -1,169 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-/* Basic styling for the profile page */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-    
-}
-
-#profile-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-#profile-header {
-    text-align: center;
-}
-
-#profile-img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-}
-
-#username {
-    font-size: 24px;
-    font-family: 'Courier New', Courier, monospace;
-    margin-top: 10px;
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 30px;
-}
-
-#bio {
-    font-size: 16px;
-    color: #666;
-}
-
-#follow-info {
-    margin: 20px 0;
-}
-#follow{
- list-style: none;
- display: flex;
- justify-content: center;
- gap: 50px;
-}
-
-#posts-section {
-    margin-top: 30px;
-}
-
-#posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-#posts-grid img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-}
-
-#edit-profile-btn{
-    position: relative;
-    top: 30px;
-    left: 340px;
-}
-
-#edit-profile-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-#edit-profile-form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-    top: 30px;
-    
-}
-
-#edit-profile-form label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-#edit-profile-form input,
-#edit-profile-form textarea {
-    width: 95%;
-    padding: 8px;
-    margin-bottom: 10px;
-}
-
-#edit-profile-form button {
-    width: 100%;
-    padding: 10px;
-    background-color: #5C6BC0;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 10px;
-
-}
-
-#edit-profile-form button:hover {
-    background-color: #3f51b5;
-}
-
-/* Style for the post modal */
-.post-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 600px;
-    max-height: 80%;
-    overflow-y: auto;
-}
-
-.modal-content img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-}
-
-.comments {
-    margin-top: 10px;
-}
-
-.comment {
-    padding: 5px;
-    background-color: #f0f0f0;
-    margin-bottom: 5px;
-    border-radius: 4px;
-}
-
 
 * {
   margin: 0;
@@ -302,6 +137,11 @@ body {
   background: #fff;
 }
 
+#home1{
+  color: #151A2D;
+  background: #fff;
+}
+
 .sidebar-nav .nav-item {
   position: relative;
 }
@@ -340,16 +180,64 @@ body {
 }
 
 
+#home1{
+  color: #151A2D;
+  background: #fff;
+}
 
+.sidebar-nav .nav-item {
+  position: relative;
+}
+
+#upload1{
+    color: #151A2D;
+    background: #fff;
+}
+
+main {
+  margin-left: 600px;
+}
+h1{
+  padding-left: 80px;
+  padding-bottom: 50px;
+}
+
+#filelabel{
+ padding-left: 20px;
+ line-height: 40px;
+}
+
+.file-label {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;  /* Circle size */
+  height: 60px; /* Circle size */
+  border: 2px solid grey; /* Border color */
+  border-radius: 50%; /* Makes it a circle */
+  background-color: #fff; /* Circle background */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.file-label:hover {
+  background-color: #f0f0f0;  /* Circle background color on hover */
+  transform: scale(1.1); /* Slight zoom on hover */
+}
+
+.material-symbols-rounded {
+  font-size: 36px;  /* Size of the plus icon */
+  color: grey;   /* Color of the plus icon */
+}
+
+#file{
+  margin-left: 165px;
+
+}
 
 
 /* Responsive media query code for small screens */
 @media (max-width: 920px) {
-
-    body{
-        margin-top: 100px;
-    }
-
   .sidebar {
     height: 56px;
     margin: 13px;
@@ -413,6 +301,26 @@ body {
     margin: 40px 0 30px;
 
   }
+  .file-label {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;  /* Circle size */
+    height: 60px; /* Circle size */
+    border: 2px solid #608BC1; /* Border color */
+    border-radius: 50%; /* Makes it a circle */
+    background-color: #fff; /* Circle background */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
   
+  .file-label:hover {
+    background-color: #f0f0f0;  /* Circle background color on hover */
+    transform: scale(1.1); /* Slight zoom on hover */
+  }
   
+  .material-symbols-rounded {
+    font-size: 36px;  /* Size of the plus icon */
+    color:grey;   /* Color of the plus icon */
+  }
 }

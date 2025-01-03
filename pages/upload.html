@@ -17,7 +17,7 @@
         <!-- Sidebar header -->
         <header class="sidebar-header">
             <a href="#" class="header-logo">
-                <img id="logo-full" src="../images/logo_white.png" alt="Collapsed Logo">
+                <img id="logo-full" src="../assets/images/logo_white.png" alt="Collapsed Logo">
             </a>
             <button class="toggler sidebar-toggler">
                 <span class="material-symbols-rounded">chevron_left</span>
@@ -38,7 +38,7 @@
                     <span class="nav-tooltip">Home</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" >
                         <span class="nav-icon material-symbols-rounded">Search</span>
                         <span class="nav-label">Discover</span>
                     </a>
@@ -60,20 +60,47 @@
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <span class="nav-icon material-symbols-rounded">settings</span>
-                        <span class="nav-label">Settings</span>
+                        <span class="nav-icon material-symbols-rounded">bookmark</span>
+                        <span class="nav-label">Saved</span>
                     </a>
-                    <span class="nav-tooltip">Settings</span>
+                    <span class="nav-tooltip">Saved</span>
                 </li>
             </ul>
 
            
     </aside>
+<main>
+
+    
+    <form id="postForm">
+        <h1>Create a Post</h1>
+        <!-- File input for image/video -->
+        <label for="file" class="file-label">
+            <span class="material-symbols-rounded">add</span>
+        </label>
+        <input type="file" id="file" name="file" accept="image/*,video/*" required style="display:none;">
+        <br>
+        <!-- Input for caption -->
+        <label for="caption">Caption</label><br>
+        <textarea id="caption" name="caption" rows="4" cols="50" required></textarea><br><br>
+        <label for="hashtags">Hashtags</label><br>
+        <textarea id="hashtags" name="hashtags" rows="4" cols="50" required></textarea><br><br>
+
+        <button type="submit">Post</button>
+    </form>
+</main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js"></script>
+
+    <script src="upload.js"></script>
 
   
     
 </body>
 <script type="module" src="../script/home.js"></script>
-<script type="module" src="../script/fetch.js"></script>    
+<script type="module" src="../script/upload.js"></script>    
 
 </html>
