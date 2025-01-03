@@ -8,16 +8,16 @@ const logoCollapsed = document.getElementById("logo-collapsed");
 let collapsedSidebarHeight = "56px";
 let fullSidebarHeight = "calc(100vh - 32px)";
 
-// Function to update logo visibility based on sidebar state
-const updateLogoVisibility = () => {
-  if (sidebar.classList.contains("collapsed")) {
-    logoFull.style.display = "none";         // Hide full logo
-    logoCollapsed.style.display = "block";    // Show collapsed logo
-  } else {
-    logoFull.style.display = "block";         // Show full logo
-    logoCollapsed.style.display = "none";     // Hide collapsed logo
-  }
-}
+// // Function to update logo visibility based on sidebar state
+// const updateLogoVisibility = () => {
+//   if (sidebar.classList.contains("collapsed")) {
+//     logoFull.style.display = "none";         // Hide full logo
+//     logoCollapsed.style.display = "block";    // Show collapsed logo
+//   } else {
+//     logoFull.style.display = "block";         // Show full logo
+//     logoCollapsed.style.display = "none";     // Hide collapsed logo
+//   }
+// }
 
 // Toggle sidebar's collapsed state
 sidebarToggler.addEventListener("click", () => {
@@ -42,12 +42,12 @@ window.addEventListener("resize", () => {
     sidebar.classList.remove("collapsed");  // Ensure sidebar is open on larger screens
     sidebar.style.height = fullSidebarHeight; // Set height to full
     logoFull.style.display = "block";       // Show full logo
-    logoCollapsed.style.display = "none";   // Hide collapsed logo
+    // logoCollapsed.style.display = "none";   // Hide collapsed logo
     sidebarToggler.style.display = "none";  // Hide collapse button on larger screens
   } else {
     // Only collapse the sidebar on smaller screens (below 920px)
     sidebar.style.height = collapsedSidebarHeight;
-    logoFull.style.display = "none";        // Hide full logo
+    // logoFull.style.display = "";        // Hide full logo
     logoCollapsed.style.display = "block";  // Show collapsed logo
     sidebarToggler.style.display = "block"; // Show collapse button on smaller screens
   }

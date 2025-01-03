@@ -20,6 +20,14 @@
     font-size: 18px;
   }
   
+.login-eye-icon {
+    position: relative;
+    left: 290px;
+    top: -9px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+  }  
   .input-field {
     position: relative;
   }
@@ -48,6 +56,7 @@
         font-family: Arial, sans-serif;
         background-color: white;  
         margin-left: 18px;
+        margin-top: 80px;
     
     }
     
@@ -110,6 +119,7 @@
         padding: 5px;
         border: 1px solid white;
         border-radius: 4px;
+        height: 37px;
     }
     
     .btn {

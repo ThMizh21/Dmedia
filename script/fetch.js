@@ -304,7 +304,7 @@ async function fetchPosts() {
           hashtags.forEach((hashtag) => {
             const hashtagSpan = document.createElement("span");
             hashtagSpan.classList.add("hashtag");
-            hashtagSpan.textContent = `${hashtag}`;
+            hashtagSpan.textContent = `#${hashtag} `;
             hashtagDiv.appendChild(hashtagSpan);
             hashtagDiv.style.fontSize ="16px"
             hashtagDiv.style.paddingBottom ="10px"

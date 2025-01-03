@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<!-- Coding By CodingNepal - youtube.com/@codingnepal -->
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dmedia</title>
-    <link rel="stylesheet" href="../css/upload.css">
-    <!-- Linking Google fonts for icons -->
+    <link rel="stylesheet" href="../css/saved.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
 </head>
 
 <body>
     <aside class="sidebar">
-        <!-- Sidebar header -->
         <header class="sidebar-header">
             <a href="#" class="header-logo">
-                <img id="logo-full" src="../images/logo_white.png" alt="Collapsed Logo">
+                <img id="logo-full" src="../assets/images/logo_white.png" alt="Collapsed Logo">
             </a>
             <button class="toggler sidebar-toggler">
                 <span class="material-symbols-rounded">chevron_left</span>
@@ -28,7 +25,6 @@
         </header>
 
         <nav class="sidebar-nav">
-            <!-- Primary top nav -->
             <ul class="nav-list primary-nav">
                 <li class="nav-item">
                     <a href="./home.html" class="nav-link">
@@ -69,11 +65,14 @@
 
            
     </aside>
+<main>
 
-  
+    <div id="saved-posts" class="grid-container"></div>
+    
+</main>
     
 </body>
 <script type="module" src="../script/home.js"></script>
-<script type="module" src="../script/fetch.js"></script>    
+<script type="module" src="../script/saved.js"></script>    
 
 </html>

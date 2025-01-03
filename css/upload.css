@@ -179,6 +179,16 @@ body {
   width: 100%;
 }
 
+
+#home1{
+  color: #151A2D;
+  background: #fff;
+}
+
+.sidebar-nav .nav-item {
+  position: relative;
+}
+
 #upload1{
     color: #151A2D;
     background: #fff;

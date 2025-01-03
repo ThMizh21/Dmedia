@@ -1,4 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  
+  #messageBox {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  #messageInput {
+    padding: 10px;
+    margin: 10px 0;
+    width: 300px;
+    height: 100px;
+  }
+  
+  button {
+    padding: 10px;
+    width: 100px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .message {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #e3e3e3;
+    border-radius: 5px;
+  }
+  
+  .received {
+    background-color: #d1e7dd;
+  }
+  
+  .sent {
+    background-color: #cfe2ff;
+  }
+  
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 * {
   margin: 0;
