@@ -215,7 +215,7 @@ async function fetchPosts() {
         cHeadDiv.classList.add("cHead");
 
         const userImg = document.createElement("img");
-        userImg.src = profile || '';
+        userImg.src = profile || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg';
         userImg.alt = `${username}'s profile image`;
         userImg.classList.add("userPrf");
 

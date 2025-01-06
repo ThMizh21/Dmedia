@@ -103,7 +103,8 @@ async function loadUserPosts(uid) {
             // If posts are found, display them
             querySnapshot.forEach(doc => {
                 const post = doc.data();
-                const postDiv = document.createElement('div');
+                const postDiv = document.createElement('a');
+                postDiv.href = 'post-details.html?postId=${postId}'; // Add a link to the post
                 postDiv.classList.add('post-item');
                 
                 if (post.post) {
