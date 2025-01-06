@@ -4,15 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Post Details</title>
+  <link rel="stylesheet" href="../css/post-details.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
 </head>
 <body>
     <div id="post-details">
-        <h1 id="post-title"></h1>
+        <div id="post-head"></div> <!-- Add this div to match the JS code -->
         <div id="post-content">
+            <div id="post-discription"></div>
             <!-- Post content will be injected here -->
         </div>
-        <button id="back-button">Back</button>
     </div>
+    <button id="back-button">Back</button>
+
+    <!-- Modal for Comments -->
+<div id="comment-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-modal" class="close-btn">&times;</span>
+      <h2>Comments</h2>
+      <div id="comments-container"></div>
+      <textarea id="comment-input" placeholder="Write a comment..." rows="4"></textarea>
+      <button id="submit-comment">Post Comment</button>
+    </div>
+  </div>
+  
 </body>
 <script type="module" src="../script/post-details.js"></script> <!-- Include your JS file here -->
 </html>

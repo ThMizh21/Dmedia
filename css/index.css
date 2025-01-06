@@ -171,9 +171,9 @@
     
     body {
         font-family: Arial, sans-serif;
-        background-color: white  ;
-        /* margin-top: 200px; */
-       
+        background-image: url(../assets/images/Vector\ graphic\ of\ gradient\ abstract\ background\ -\ vave\ art.png)  ;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
     
    
@@ -202,7 +202,7 @@
         width: 100%; /* This width can also be set to a max-width if needed */
         max-width: 450px; /* Limits maximum width to avoid stretching on large screens */
         text-align: center;
-        background-color: #608bc1; /* Semi-transparent background for a clean look */
+        background-color: #104c8a; /* Semi-transparent background for a clean look */
         backdrop-filter: blur(3px);
         margin:auto; /* Centers the container on the page */
         box-sizing: border-box; /* Ensures padding does not affect overall width */

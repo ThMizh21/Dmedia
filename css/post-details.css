@@ -1,128 +1,168 @@
-/* postStyles.css */
-.post-container {
+* {
+    margin: 0%;
+    padding: 0%;
+}
+
+.post {
+    display: grid;
+    grid-template-rows: 100px 500px 30px;
+    width: 450px;
+    height: 730px;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-top: 40px;
+    border-radius: 20px;
+}
+
+#post-head {
+    position: relative;
+    top: -19px;
+    left: -6px;
+    margin-bottom: 10px;
+}
+
+.user-profile {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 20px 0px 0px 10px;
+}
+
+.user-name {
+    color: black;
+    padding: 33px 0px 0px 15px;
+    position: relative;
+    top: -23px;
+    left: -11px;
+    text-decoration: none;
+
+}
+
+.post-content {
+    width: 300px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    margin-top: 20px;
-  }
-  
-  .post-header {
+}
+
+.post-content img{
+    width: 300px;
+}
+
+.post-content video{
+    width: 300px;
+}
+.content {
+    width: 300px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    width: 100%;
-    background-color: #f8f8f8;
-    padding: 10px;
-    border-radius: 10px 10px 0 0;
-  }
-  
-  .post-header .user-info {
-    display: flex;
-    align-items: center;
-  }
-  
-  .post-header .user-info img {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-  }
-  
-  .post-header .user-info a {
-    font-size: 16px;
-    font-weight: bold;
-  }
-  
-  .post-header .actions {
-    display: flex;
-    align-items: center;
-  }
-  
-  .post-header .actions .fa {
-    margin-left: 15px;
-    cursor: pointer;
-  }
-  
-  .post-content {
-    width: 100%;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 0 0 10px 10px;
-    text-align: center;
-  }
-  
-  .caption {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #333;
-  }
-  
-  .hashtags {
-    font-size: 12px;
-    color: #007bff;
-    margin-top: 5px;
-  }
-  
-  .post-date {
-    font-size: 12px;
-    color: #777;
-    margin-top: 5px;
-  }
-  
-  .comment-modal {
+    
+}
+
+.caption{
+    width: 300px;
+    padding-top: 40px;
+}
+
+.hashtags{
+    padding-top: 30px;
+}
+
+.post-date{
+    color: rgb(57, 56, 56);
+    padding-top: 10px;
+}
+
+/* Modal Background */
+.modal {
+    display: none; /* Hidden by default */
     position: fixed;
-    top: 0;
+    z-index: 1;
     left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with transparency */
+    
   }
   
+  /* Modal Content */
   .modal-content {
     background-color: white;
+    margin: 15% auto;
     padding: 20px;
+    border: 1px solid #888;
     width: 80%;
     max-width: 600px;
-    border-radius: 10px;
-    overflow-y: auto;
+    border-radius: 20px;
   }
   
-  .comments-container {
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  
-  .comment {
-    margin-bottom: 10px;
-  }
-  
-  .add-comment-container {
-    margin-top: 20px;
-  }
-  
-  .add-comment-container textarea {
+  /* Close Button */
+  .close-btn {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
+
+#comment-input{
     width: 100%;
+    height: 150px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    resize: none;
+}
+  /* Submit Button */
+  #submit-comment {
     padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .add-comment-container button {
-    padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #608bc1;
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
+    margin-left: 240px;
+    margin-top: 10px;
+    border-radius: 10px;
   }
   
-  .add-comment-container button:hover {
-    background-color: #0056b3;
+  #submit-comment:hover {
+    background-color: #4979b3;
+  }
+
+  #comment-error-message {
+    color: red;
+    margin-top: 5px;
+    font-size: 12px;
+  }
+/* Style for the comment box */
+.comment-box {
+    border: 1px solid #ddd;  /* Light gray border for the box */
+    padding: 10px;            /* Padding inside the box */
+    margin-bottom: 10px;      /* Spacing between each comment */
+    border-radius: 5px;       /* Rounded corners */
+    background-color: #f9f9f9; /* Light background color */
   }
   
+  /* Style for the username link */
+  .user-link {
+    font-weight: bold;       /* Bold username */
+    color: black;            /* Dark black color */
+    text-decoration: none;   /* Remove underline */
+    margin-right: 5px;       /* Space between username and comment text */
+  }
+  
+  /* Optional: Add hover effect on the username */
+  .user-link:hover {
+    color: #333; /* Slightly darker shade on hover */
+  }
+    
