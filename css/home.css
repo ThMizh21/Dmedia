@@ -17,7 +17,7 @@ body {
   width: 330px;
   margin: 16px;
   border-radius: 16px;
-  background: #608BC1;
+  background: #104c8a;
   height: calc(100vh - 32px);
   transition: all 0.4s ease;
   z-index: 10;
@@ -57,7 +57,7 @@ body {
 .sidebar-header .toggler {
   height: 35px;
   width: 35px;
-  color: #151A2D;
+  color: #104c8a;
   border: none;
   cursor: pointer;
   display: flex;
@@ -109,7 +109,7 @@ body {
 }
 
 .sidebar-nav .nav-link {
-  color: #fff;
+  color: white;
   display: flex;
   gap: 12px;
   white-space: nowrap;
@@ -134,14 +134,10 @@ body {
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #151A2D;
+  color: #104c8a;
   background: #fff;
 }
 
-#home1{
-  color: #151A2D;
-  background: #fff;
-}
 
 .sidebar-nav .nav-item {
   position: relative;
@@ -151,7 +147,7 @@ body {
   position: absolute;
   top: -10px;
   opacity: 0;
-  color: #151A2D;
+  color: #104c8a;
   display: none;
   pointer-events: none;
   padding: 6px 12px;
@@ -179,6 +175,7 @@ body {
   bottom: 30px;
   width: 100%;
 }
+
 
 
 
@@ -296,9 +293,11 @@ body {
 }
 
 .comments-list {
-  max-height: 300px;
-  overflow-y: auto;
-  margin-bottom: 10px;
+  border: 1px solid #ddd;  /* Light gray border for the box */
+  padding: 10px;            /* Padding inside the box */
+  margin-bottom: 10px;      /* Spacing between each comment */
+  border-radius: 5px;       /* Rounded corners */
+  background-color: #f9f9f9;
 }
 
 .comment {
@@ -383,10 +382,32 @@ body {
 
 #signOut{
   border: 1px solid transparent;
-  background-color: #608bc1;
+  background-color: #104c8a;
   width: 20px;
 }
 
+.active{
+  background-color:white;
+  color: #104c8a !important; 
+}
+
+.comment-input{
+  resize: none;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #104c8a;
+}
+
+.submit-comment-button{
+  background-color: #104c8a;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 200px;
+}
 @media (max-width: 920px) {
   .sidebar {
     height: 56px;
@@ -407,7 +428,7 @@ body {
     top: 0;
     z-index: 20;
     border-radius: 16px;
-    background: #608BC1;
+    background: #104c8a;
     padding: 8px 10px;
   }
 
@@ -604,8 +625,11 @@ body {
 }
 
 .comments-container {
-  margin-top: 10px;
-}
+  border: 1px solid #ddd;  /* Light gray border for the box */
+  padding: 10px;            /* Padding inside the box */
+  margin-bottom: 10px;      /* Spacing between each comment */
+  border-radius: 5px;       /* Rounded corners */
+  background-color: #f9f9f9;}
 
 .comment {
   margin-bottom: 10px;

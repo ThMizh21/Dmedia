@@ -110,7 +110,7 @@ async function handleFollowButtonClick(targetUserId, followButton) {
 function displayUserProfile(userDetails) {
     if (userDetails) {
         document.getElementById("username").textContent = userDetails.username;
-        document.getElementById("profile-img").src = userDetails.profile || "../images/default-profile.png";
+        document.getElementById("profile-img").src = userDetails.profile || "https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg";
         document.getElementById("bio").textContent = userDetails.bio || "No bio available.";
         document.getElementById("name").textContent = userDetails.name || "Anonymous";
 
@@ -168,8 +168,10 @@ async function displayUserPosts(userId) {
                 postImg.style.height = '250px'; 
                 postImg.style.objectFit = 'cover'; 
 
+                // Add redirection on image click
                 postImg.addEventListener('click', () => {
-                    openPostModal(post);
+                    // Redirect to the post-details page with the post's UID
+                    window.location.href = `post-details.html?postId=${doc.id}`;
                 });
 
                 postDiv.appendChild(postImg);
@@ -178,197 +180,6 @@ async function displayUserPosts(userId) {
             postsSection.appendChild(postDiv);
         });
     }
-}
-
-/// Toggle Like functionality
-async function toggleLikePost(postId, likes, likeIcon) {
-    const loggedInUserUid = getLoggedInUserUid();
-    const postRef = doc(db, "posts", postId);
-
-    if (likes && likes.includes(loggedInUserUid)) {
-        // User has already liked the post, so we remove the like
-        await updateDoc(postRef, {
-            likes: arrayRemove(loggedInUserUid)
-        });
-        likeIcon.style.color = "gray"; // Change like icon color to gray
-    } else {
-        // User hasn't liked the post, so we add the like
-        await updateDoc(postRef, {
-            likes: arrayUnion(loggedInUserUid)
-        });
-        likeIcon.style.color = "black"; // Change like icon color to black
-    }
-}
-
-// Save Post functionality
-async function savePost(postId, savedIcon) {
-    const loggedInUserUid = getLoggedInUserUid();
-    const userRef = doc(db, "users", loggedInUserUid);
-
-    // Check if the post is already saved
-    const userDoc = await getDoc(userRef);
-    const userData = userDoc.data();
-    const savedPosts = userData.savedPosts || [];
-
-    if (savedPosts.includes(postId)) {
-        // If already saved, unsave the post
-        await updateDoc(userRef, {
-            savedPosts: arrayRemove(postId)
-        });
-        savedIcon.style.color = "gray"; // Change icon color to gray
-    } else {
-        // If not saved, save the post
-        await updateDoc(userRef, {
-            savedPosts: arrayUnion(postId)
-        });
-        savedIcon.style.color = "black"; // Change icon color to black
-    }
-}
-
-// Function to open the post details modal
-async function openPostModal(post) {
-    const modal = document.createElement('div');
-    modal.classList.add('post-modal');
-    
-    const modalContent = document.createElement('div');
-    modalContent.classList.add('modal-content');
-
-    // Post image
-    const modalImg = document.createElement('img');
-    modalImg.src = post.post;
-    modalImg.style.width = '100%'; 
-    modalImg.style.height = 'auto'; 
-    modalContent.appendChild(modalImg);
-
-    // Caption
-    const modalCaption = document.createElement('p');
-    modalCaption.textContent = post.caption || 'No caption';
-    modalContent.appendChild(modalCaption);
-
-    // Likes and Save Section (aligned side by side)
-    const actionDiv = document.createElement('div');
-    actionDiv.classList.add('action-div');
-    actionDiv.classList.add('likes'); // Apply the flex layout to this section
-
-    // Like Icon
-    const likeIcon = document.createElement("span");
-    likeIcon.classList.add("fa", post.likes && post.likes.includes(getLoggedInUserUid()) ? "fa-thumbs-up" : "fa-thumbs-up");
-    likeIcon.style.color = post.likes && post.likes.includes(getLoggedInUserUid()) ? "black" : "gray";
-    likeIcon.onclick = () => toggleLikePost(post.id, post.likes, likeIcon);
-
-    const likeCount = document.createElement("span");
-    likeCount.textContent = post.likes ? post.likes.length : 0;
-    likeCount.classList.add("likeCount");
-    actionDiv.appendChild(likeIcon);
-    actionDiv.appendChild(likeCount);
-
-    // Saved Icon
-    const savedIcon = document.createElement("span");
-    savedIcon.classList.add("fa", "fa-bookmark");
-    savedIcon.style.color = post.savedPosts && post.savedPosts.includes(getLoggedInUserUid()) ? "black" : "gray";
-    savedIcon.onclick = () => savePost(post.id, savedIcon);
-    actionDiv.appendChild(savedIcon);
-
-    modalContent.appendChild(actionDiv);
-
-    // Comments Section
-    const commentsDiv = document.createElement('div');
-    commentsDiv.classList.add('comments');
-
-    if (post.comments && post.comments.length > 0) {
-        for (const commentObj of post.comments) {
-            const commentDiv = document.createElement('div');
-            commentDiv.classList.add('comment');
-
-            // Fetch the user data for the comment's userId
-            try {
-                const userDoc = await getDoc(doc(db, 'users', commentObj.userId));
-                const userData = userDoc.data();
-
-                // Displaying the comment author's name (bold)
-                const commentUser = document.createElement('strong');
-                commentUser.textContent = userData ? userData.username : 'Unknown User';
-                commentDiv.appendChild(commentUser);
-
-                // Adding some spacing between the username and comment
-                const space = document.createElement('span');
-                space.textContent = ': ';
-                commentDiv.appendChild(space);
-
-                // Displaying the comment text (smaller)
-                const commentText = document.createElement('p');
-                commentText.textContent = commentObj.comment; // Access the comment text
-                commentText.style.fontSize = '14px'; // Smaller font size for comment text
-                commentDiv.appendChild(commentText);
-
-            } catch (error) {
-                console.error('Error fetching user data for comment:', error);
-            }
-
-            commentsDiv.appendChild(commentDiv);
-        }
-    } else {
-        const noComments = document.createElement('p');
-        noComments.textContent = 'No comments yet.';
-        commentsDiv.appendChild(noComments);
-    }
-
-    modalContent.appendChild(commentsDiv);
-
-    // Comment Input Box
-    const commentInputDiv = document.createElement('div');
-    commentInputDiv.classList.add('comment-input');
-    const commentInput = document.createElement('input');
-    commentInput.type = 'text';
-    commentInput.placeholder = 'Add a comment...';
-    commentInput.classList.add('comment-input-box');
-    
-    const commentSubmitBtn = document.createElement('button');
-    commentSubmitBtn.textContent = 'Post';
-    commentSubmitBtn.onclick = async () => {
-        const commentText = commentInput.value;
-        if (commentText.trim() !== '') {
-            await postComment(post.id, commentText);
-            commentInput.value = '';  // Clear the input field
-        }
-    };
-
-    commentInputDiv.appendChild(commentInput);
-    commentInputDiv.appendChild(commentSubmitBtn);
-
-    modalContent.appendChild(commentInputDiv);
-
-    // Append the modal content to the modal
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-
-    modal.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            closePostModal(modal); 
-        }
-    });
-}
-
-// Function to post a comment
-async function postComment(postId, commentText) {
-    const loggedInUserUid = getLoggedInUserUid();
-    const postRef = doc(db, "posts", postId);
-
-    const commentObj = {
-        userId: loggedInUserUid,
-        comment: commentText,
-        timestamp: new Date()
-    };
-
-    await updateDoc(postRef, {
-        comments: arrayUnion(commentObj)
-    });
-    window.location.reload();  // Reload the page to show the new comment
-}
-
-// Close Post Modal
-function closePostModal(modal) {
-    document.body.removeChild(modal);
 }
 
 // Handle document ready and loading profile and posts

@@ -43,6 +43,7 @@ function getCurrentUser() {
 }
 
 // Function to fetch and display saved posts for the logged-in user
+// Function to fetch and display saved posts for the logged-in user
 async function displaySavedPosts() {
   try {
     const userId = getCurrentUser();
@@ -71,20 +72,20 @@ async function displaySavedPosts() {
           // Check if post exists
           if (postDoc.exists()) {
             const postData = postDoc.data();
-            const postImage = postData.image || postData.video; // Assume 'image' or 'video' field exists
+            const postUrl = postData.post;  // This is the URL of the image or video
 
             // Create a thumbnail div for each post
             const postElement = document.createElement('div');
             postElement.classList.add('post-thumbnail');
             postElement.setAttribute('data-post-id', postId); // Store the post ID for redirection
 
-            // If the post is an image
-            if (postImage && (postImage.includes('.jpg') || postImage.includes('.png'))) {
-              postElement.innerHTML = `<img src="${postImage}" alt="Post Thumbnail">`;
+            // If the post URL is an image (jpg, png)
+            if (postUrl && (postUrl.includes('.jpg') || postUrl.includes('.png'))) {
+              postElement.innerHTML = `<img src="${postUrl}" alt="Post Thumbnail">`;
             }
-            // If the post is a video
-            else if (postImage && postImage.includes('.mp4')) {
-              postElement.innerHTML = `<video src="${postImage}" controls></video>`;
+            // If the post URL is a video (mp4)
+            else if (postUrl && postUrl.includes('.mp4')) {
+              postElement.innerHTML = `<video src="${postUrl}"></video>`;
             }
 
             // Add the post thumbnail to the grid container

@@ -103,8 +103,11 @@ async function loadUserPosts(uid) {
             // If posts are found, display them
             querySnapshot.forEach(doc => {
                 const post = doc.data();
+                const postId = doc.id;  // Get the post's unique ID from Firestore
                 const postDiv = document.createElement('a');
-                postDiv.href = 'post-details.html?postId=${postId}'; // Add a link to the post
+                
+                // Set the link to post-details.html with the postId as a query parameter
+                postDiv.href = `post-details.html?postId=${postId}`;
                 postDiv.classList.add('post-item');
                 
                 if (post.post) {
@@ -114,10 +117,7 @@ async function loadUserPosts(uid) {
                     postImg.style.height = '250px'; 
                     postImg.style.objectFit = 'cover'; 
 
-                    postImg.addEventListener('click', () => {
-                        openPostModal(post);
-                    });
-
+                    // Append the image to the post div
                     postDiv.appendChild(postImg);
                 }
 
@@ -127,92 +127,6 @@ async function loadUserPosts(uid) {
     } catch (error) {
         console.error('Error loading posts: ', error);
     }
-}
-
-// Function to open the post details modal
-async function openPostModal(post) {
-    const modal = document.createElement('div');
-    modal.classList.add('post-modal');
-    
-    const modalContent = document.createElement('div');
-    modalContent.classList.add('modal-content');
-
-    // Post image
-    const modalImg = document.createElement('img');
-    modalImg.src = post.post;
-    modalImg.style.width = '100%'; 
-    modalImg.style.height = 'auto'; 
-    modalContent.appendChild(modalImg);
-
-    // Caption
-    const modalCaption = document.createElement('p');
-    modalCaption.textContent = post.caption || 'No caption';
-    modalContent.appendChild(modalCaption);
-
-    // Comments Section
-    const commentsDiv = document.createElement('div');
-    commentsDiv.classList.add('comments');
-    
-    if (post.comments && post.comments.length > 0) {
-        for (const commentObj of post.comments) {
-            const commentDiv = document.createElement('div');
-            commentDiv.classList.add('comment');
-
-            // Fetch the user data for the comment's userId
-            try {
-                const userDoc = await getDoc(doc(firestore, 'users', commentObj.userId));
-                const userData = userDoc.data();
-
-                // Displaying the comment author's name (bold)
-                const commentUser = document.createElement('strong');
-                commentUser.textContent = userData ? userData.username : 'Unknown User';
-                commentDiv.appendChild(commentUser);
-
-                // Adding some spacing between the username and comment
-                const space = document.createElement('span');
-                space.textContent = ': ';
-                commentDiv.appendChild(space);
-
-                // Displaying the comment text (smaller)
-                const commentText = document.createElement('p');
-                commentText.textContent = commentObj.comment; // Access the comment text
-                commentText.style.fontSize = '14px'; // Smaller font size for comment text
-                commentDiv.appendChild(commentText);
-
-            } catch (error) {
-                console.error('Error fetching user data for comment:', error);
-            }
-
-            commentsDiv.appendChild(commentDiv);
-        }
-    } else {
-        const noComments = document.createElement('p');
-        noComments.textContent = 'No comments yet.';
-        commentsDiv.appendChild(noComments);
-    }
-    
-    modalContent.appendChild(commentsDiv);
-
-    // Likes Section (same as before)
-    const likesDiv = document.createElement('div');
-    likesDiv.classList.add('likes');
-    const likesCount = post.likes ? post.likes.length : 0;
-    likesDiv.textContent = `${likesCount} Like${likesCount !== 1 ? 's' : ''}`;
-    modalContent.appendChild(likesDiv);
-
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-
-    modal.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            closePostModal(modal); 
-        }
-    });
-}
-
-
-function closePostModal(modal) {
-    document.body.removeChild(modal);
 }
 
 // Open Edit Profile Modal
@@ -236,50 +150,99 @@ saveProfileBtn.addEventListener('click', async () => {
     const newBio = editBioInput.value;
     const profileImgFile = editProfileImgInput.files[0];  // The uploaded image file
 
-    try {
-        let profileImageUrl = null;
+    // Clear previous error messages
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach((msg) => msg.remove());
 
-        // Check if a file is selected
-        if (profileImgFile) {
-            console.log('Uploading file: ', profileImgFile);
+    let isValid = true;
 
-            // Create FormData to send the file to Cloudinary
-            const formData = new FormData();
-            formData.append('file', profileImgFile);
-            formData.append('upload_preset', 'ml_default');  // Your Cloudinary upload preset
-            formData.append('cloud_name', 'dzyypiqod'); // Cloudinary account name
+    // Validate Name
+    if (newName.trim() === '') {
+        isValid = false;
+        showError(editNameInput, 'Name cannot be empty.');
+    } else if (newName.length > 20) {
+        isValid = false;
+        showError(editNameInput, 'Name cannot be more than 20 characters.');
+    } else if (/[^a-zA-Z\s]/.test(newName)) { // Check for special characters
+        isValid = false;
+        showError(editNameInput, 'Name cannot contain special characters.');
+    }
 
-            // Upload the file to Cloudinary (adjust this code to use your Cloudinary API)
-            const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dzyypiqod/upload', {
-                method: 'POST',
-                body: formData,
+    // Validate Username
+    if (newUsername.trim().length < 3 || newUsername.trim().length > 12) {
+        isValid = false;
+        showError(editUsernameInput, 'Username must be between 3 and 12 characters.');
+    }
+
+    // Validate Bio
+    if (newBio.length > 160) {
+        isValid = false;
+        showError(editBioInput, 'Bio cannot be more than 160 characters.');
+    }
+
+    // If all validations passed, proceed with saving the profile
+    if (isValid) {
+        try {
+            let profileImageUrl = null;
+
+            // Check if a file is selected
+            if (profileImgFile) {
+                console.log('Uploading file: ', profileImgFile);
+
+                // Create FormData to send the file to Cloudinary
+                const formData = new FormData();
+                formData.append('file', profileImgFile);
+                formData.append('upload_preset', 'ml_default');  // Your Cloudinary upload preset
+                formData.append('cloud_name', 'dzyypiqod'); // Cloudinary account name
+
+                // Upload the file to Cloudinary (adjust this code to use your Cloudinary API)
+                const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dzyypiqod/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const data = await uploadResponse.json();
+                profileImageUrl = data.secure_url;
+            } else {
+                // If no file is selected, do not change the profile image
+                const userDoc = await getDoc(doc(firestore, 'users', currentUserUid));
+                const existingUserData = userDoc.data();
+                profileImageUrl = existingUserData.profile || null; // Retain existing profile image
+            }
+
+            // Update user document in Firestore with new profile information (no image change if no file uploaded)
+            await updateDoc(doc(firestore, 'users', currentUserUid), {
+                name: newName,
+                username: newUsername,
+                bio: newBio,
+                profile: profileImageUrl, // This will either be the new URL or the existing one
             });
 
-            const data = await uploadResponse.json();
-            profileImageUrl = data.secure_url;
+            // Update UI with new profile data
+            profileImg.src = profileImageUrl || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg';
+            nameElement.textContent = newName;
+            usernameElement.textContent = newUsername;
+            bioElement.textContent = newBio;
+
+            // Close the modal
+            editProfileModal.style.display = 'none';
+
+            // Show success alert
+            alert('Profile updated successfully!');
+        } catch (error) {
+            console.error('Error saving profile changes:', error);
         }
-
-        // Update user document in Firestore with new profile information
-        await updateDoc(doc(firestore, 'users', currentUserUid), {
-            name: newName,
-            username: newUsername,
-            bio: newBio,
-            profile: profileImageUrl || null,
-        });
-
-        // Update UI with new profile data
-        profileImg.src = profileImageUrl || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg';
-        nameElement.textContent = newName;
-        usernameElement.textContent = newUsername;
-        bioElement.textContent = newBio;
-
-        // Close the modal
-        editProfileModal.style.display = 'none';
-
-    } catch (error) {
-        console.error('Error saving profile changes:', error);
     }
 });
+
+// Show error message for invalid fields
+function showError(inputField, errorMessage) {
+    const errorSpan = document.createElement('span');
+    errorSpan.classList.add('error-message');
+    errorSpan.textContent = errorMessage;
+    errorSpan.style.color = 'red';
+    inputField.parentElement.appendChild(errorSpan);
+}
 
 // Cancel Edit Profile
 cancelEditBtn.addEventListener('click', () => {

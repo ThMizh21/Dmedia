@@ -182,7 +182,7 @@ body {
   width: 330px;
   margin: 16px;
   border-radius: 16px;
-  background: #608BC1;
+  background: #104c8a;
   height: calc(100vh - 32px);
   transition: all 0.4s ease;
   z-index: 10;
@@ -369,7 +369,7 @@ body {
     top: 0;
     z-index: 20;
     border-radius: 16px;
-    background: #608BC1;
+    background: #104c8a;
     padding: 8px 10px;
   }
 
