@@ -12,6 +12,15 @@ body {
   background-color: white  ;
 }
 
+main{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 0px;
+  margin-left: 250px;
+}
+
 .sidebar {
   position: fixed;
   width: 330px;
@@ -21,7 +30,7 @@ body {
   height: calc(100vh - 32px);
   transition: all 0.4s ease;
   z-index: 10;
-  margin-top: -30px;
+  margin-top: 20px;
 }
 
 
@@ -135,7 +144,7 @@ body {
 
 .sidebar-nav .nav-link:hover {
   color: #104c8a;
-  background: #fff;
+  background: #fff !important;
 }
 
 
@@ -186,8 +195,8 @@ body {
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+  margin-top: 60px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  margin-top: 40px;
 }
 
 .cHead{
@@ -383,8 +392,9 @@ body {
 #signOut{
   border: 1px solid transparent;
   background-color: #104c8a;
-  width: 20px;
+  width: 100%;
 }
+
 
 .active{
   background-color:white;
@@ -408,6 +418,69 @@ body {
   cursor: pointer;
   margin-left: 200px;
 }
+
+#statsContainer{
+  display:grid;
+  grid-template-rows: 1fr 1fr;
+  height: 95vh;  
+  position: sticky;
+  top: 0px;
+}
+
+#userProfileDetails{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  border: none;
+  border-radius: 15px;
+  width: 320px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+
+#userProfileDetails img{
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-top: -70px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+
+#userName{
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+#appStats{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  border: none;
+  border-radius: 15px;
+  /* background-color: #104c8a; */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+
+#appStats p{
+  line-height: 40px;
+}
+
+#popularHashtags{
+  margin-top: 40px;
+}
+
+#popularHashtags li{
+  list-style: none;
+  margin-left: 50px;
+
+}
+
+
 @media (max-width: 920px) {
   .sidebar {
     height: 56px;
