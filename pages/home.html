@@ -78,7 +78,7 @@
                     </a>
                     <span class="nav-tooltip">Profile</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item signOut" > 
                     <button onclick="signOut()" id="signOut" href="#" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">logout</span>
                         <span class="nav-label">Logout</span>
@@ -89,9 +89,27 @@
         </nav>
     </aside>
 
-    <main id="postContainer">
+    <main>
+        <section id="postContainer"></section>
+        <section id="statsContainer">
+            <div id="userProfileDetails">
+                <img src="" id="userProfileImg" alt="Profile Image" />
+                <p id="userName"></p>
+                <p id="userPostsCount">Number of posts: </p>
+              </div>
+              <div id="appStats">
+                <p id="totalUsersCount">Total users: </p>
+                <p id="totalPostsCount">Total posts: </p>
+                <div id="popularHashtags">
+                <h4>Most popular hashtags:</h4>
+                <ul id="popularHashtagsList">
+                </ul>    
+                </div>
+              </div>
+        </section>
         
     </main>
+
 
     <!-- Script -->
     

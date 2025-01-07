@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove ,query,where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Firebase config
@@ -31,6 +31,8 @@ onAuthStateChanged(auth, (user) => {
 
     // Fetch posts after the user is authenticated
     fetchPosts();
+    fetchUserProfile();
+    fetchAppStats();
   } else {
     currentUserId = null; // No user logged in
     console.log("No user logged in");
@@ -182,7 +184,6 @@ function createCommentModal(postId, comments) {
   document.body.appendChild(modal);
 }
 
-// Function to fetch posts
 // Function to fetch posts
 async function fetchPosts() {
   if (!currentUserId) return; // Ensure user is logged in before fetching posts
@@ -400,6 +401,113 @@ async function savePost(postId, savedIcon) {
       });
       savedIcon.style.color = "black"; // Change icon color to black (saved)
     }
+  }
+}
+
+const userProfileImg = document.getElementById("userProfileImg");  // Updated to correct ID
+const userName = document.getElementById("userName");  // Updated to correct ID
+const userPostsCount = document.getElementById("userPostsCount");
+const totalUsersCount = document.getElementById("totalUsersCount");
+const totalPostsCount = document.getElementById("totalPostsCount");
+const popularHashtags = document.getElementById("popularHashtags");
+const popularHashtagsList = document.getElementById("popularHashtagsList");
+
+// Fetch user profile details
+async function fetchUserProfile() {
+  try {
+    if (!currentUserId) {
+      console.error("User is not logged in.");
+      return; // Ensure user is logged in before fetching profile
+    }
+
+    const userRef = doc(db, "users", currentUserId);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const { username, profile } = userSnap.data();
+
+      // Set the username and profile image
+      if (userName && userProfileImg) {
+        userName.textContent = username;
+        userProfileImg.src = profile || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg';
+      }
+
+      // Fetch the number of posts the user has made
+      const postsRef = collection(db, "posts");
+      const postsQuery = query(postsRef, where("userId", "==", currentUserId)); // Assume each post has a `userId` field
+      const postsSnap = await getDocs(postsQuery);
+
+      // Store all post IDs in a temporary array (can be used if needed)
+      const userPosts = postsSnap.docs.map(doc => doc.id);
+
+      // Display the number of posts (assuming you have an element with id `userPostsCount`)
+      if (userPostsCount) {
+        userPostsCount.textContent = `Number of posts: ${userPosts.length}`;
+      }
+    } else {
+      console.warn("User profile does not exist.");
+    }
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    alert("An error occurred while fetching your profile. Please try again later.");
+  }
+}
+
+async function fetchAppStats() {
+  try {
+    // Fetch the total number of users
+    const usersCollectionRef = collection(db, "users");
+    const usersQuerySnapshot = await getDocs(usersCollectionRef);
+    const totalUsers = usersQuerySnapshot.size;
+
+    // Display the total number of users
+    if (totalUsersCount) {
+      totalUsersCount.textContent = `Total Users: ${totalUsers}`;
+    }
+
+    // Fetch the total number of posts
+    const postsCollectionRef = collection(db, "posts");
+    const postsQuerySnapshot = await getDocs(postsCollectionRef);
+    const totalPosts = postsQuerySnapshot.size;
+
+    // Display the total number of posts
+    if (totalPostsCount) {
+      totalPostsCount.textContent = `Total Posts: ${totalPosts}`;
+    }
+
+    // Fetch the most popular hashtags
+    const hashtagsMap = new Map(); // Map to store hashtag counts
+
+    postsQuerySnapshot.forEach((doc) => {
+      const postData = doc.data();
+      const { hashtags } = postData;
+
+      if (hashtags && hashtags.length > 0) {
+        hashtags.forEach((hashtag) => {
+          const count = hashtagsMap.get(hashtag) || 0;
+          hashtagsMap.set(hashtag, count + 1);
+        });
+      }
+    });
+
+    // Sort the hashtags by count in descending order
+    const sortedHashtags = new Map([...hashtagsMap.entries()].sort((a, b) => b[1] - a[1]));
+
+    // Display the top 5 most popular hashtags
+    if (popularHashtagsList) {
+      let count = 0;
+      sortedHashtags.forEach((value, key) => {
+        if (count < 5) {
+          const hashtagItem = document.createElement("li");
+          hashtagItem.textContent = `#${key} (${value})`;
+          popularHashtagsList.appendChild(hashtagItem);
+          count++;
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching app stats:", error);
+    alert("An error occurred while fetching app stats. Please try again later.");
   }
 }
 
