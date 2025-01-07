@@ -120,8 +120,13 @@ function createCommentModal(postId, comments) {
       const userDetails = await getUserDetails(userId);
       const commentUserName = userDetails ? userDetails.username : "Unknown user";
 
-      const commentDiv = document.createElement("div");
-      commentDiv.classList.add("comment");
+      // Create a box for each comment
+      const commentBox = document.createElement("div");
+      commentBox.style.border = "1px solid #ddd"; // Light border for the box
+      commentBox.style.borderRadius = "8px"; // Rounded corners
+      commentBox.style.padding = "10px";
+      commentBox.style.marginBottom = "10px"; // Space between comments
+      commentBox.style.backgroundColor = "#f9f9f9"; // Light background color
 
       const commentText = document.createElement("p");
 
@@ -134,9 +139,9 @@ function createCommentModal(postId, comments) {
       commentText.appendChild(commentUserLink);
       commentText.appendChild(document.createTextNode(comment));
 
-      commentDiv.appendChild(commentText);
+      commentBox.appendChild(commentText);
 
-      commentsContainer.appendChild(commentDiv);
+      commentsContainer.appendChild(commentBox);
     });
   } else {
     const noCommentsDiv = document.createElement("div");
@@ -147,12 +152,14 @@ function createCommentModal(postId, comments) {
   modalContent.appendChild(commentsContainer);
 
   // Add comment input and submit button
-  const commentInput = document.createElement("input");
+  const commentInput = document.createElement("textarea");
   commentInput.placeholder = "Write a comment...";
+  commentInput.classList.add("comment-input");
   modalContent.appendChild(commentInput);
 
   const submitCommentButton = document.createElement("button");
   submitCommentButton.textContent = "Post Comment";
+  submitCommentButton.classList.add("submit-comment-button");
   submitCommentButton.onclick = async () => {
     const comment = commentInput.value.trim();
     if (comment) {

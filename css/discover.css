@@ -18,7 +18,7 @@ body {
   width: 330px;
   margin: 16px;
   border-radius: 16px;
-  background: #608BC1;
+  background: #104c8a;
   height: calc(100vh - 32px);
   transition: all 0.4s ease;
   z-index: 10;
@@ -134,7 +134,7 @@ body {
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #151A2D;
+  color: #104c8a;
   background: #fff;
 }
 
@@ -317,7 +317,10 @@ main{
   font-size: 16px;
 }
 
-
+.active{
+  background-color:white;
+  color: #104c8a !important; 
+}
 
 /* Responsive media query code for small screens */
 @media (max-width: 920px) {
@@ -340,7 +343,7 @@ main{
     top: 0;
     z-index: 20;
     border-radius: 16px;
-    background: #608BC1;
+    background: #104c8a;
     padding: 8px 10px;
   }
 

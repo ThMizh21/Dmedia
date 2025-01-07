@@ -45,14 +45,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 50px;
 }
 
 .post-content img{
-    width: 300px;
+    width: 400px;
 }
 
 .post-content video{
-    width: 300px;
+    width: 400px;
 }
 .content {
     width: 300px;
@@ -63,7 +64,7 @@
 }
 
 .caption{
-    width: 300px;
+    width: 400px;
     padding-top: 40px;
 }
 
@@ -126,7 +127,7 @@
   /* Submit Button */
   #submit-comment {
     padding: 10px;
-    background-color: #608bc1;
+    background-color: #104c8a;
     color: white;
     border: none;
     cursor: pointer;
@@ -166,3 +167,9 @@
     color: #333; /* Slightly darker shade on hover */
   }
     
+  .fa-sharp{
+    position: absolute;
+      top: 24px;
+      left: 48px;
+      font-size: 2em;
+    }

@@ -404,5 +404,11 @@ window.onload = fetchPostDetails;
 
 // Back button event listener
 document.getElementById("back-button").addEventListener("click", function() {
-  window.history.back(); // Goes back to the previous page in browser history
+  if (document.referrer) {
+    // If there is a referrer (previous page), navigate to that
+    window.location.href = document.referrer;
+  } else {
+    // If no referrer (direct access), redirect to a default page, such as the homepage
+    window.location.href = "index.html";  // Change this to your desired default page
+  }
 });

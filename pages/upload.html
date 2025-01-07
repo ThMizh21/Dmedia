@@ -38,28 +38,28 @@
                     <span class="nav-tooltip">Home</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" >
+                    <a href="./discover.html" class="nav-link" >
                         <span class="nav-icon material-symbols-rounded">Search</span>
                         <span class="nav-label">Discover</span>
                     </a>
                     <span class="nav-tooltip">Discover</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="./message.html" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">Chat</span>
                         <span class="nav-label">Chat</span>
                     </a>
                     <span class="nav-tooltip">Chat</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" id="upload1">
-                        <span class="nav-icon material-symbols-rounded">upload</span>
-                        <span class="nav-label">New</span>
+                    <a href="./upload.html" class="nav-link active" >
+                        <span class="nav-icon material-symbols-rounded active ">upload</span>
+                        <span class="nav-label">Upload</span>
                     </a>
-                    <span class="nav-tooltip">New</span>
+                    <span class="nav-tooltip">Upload</span>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="./saved.html" class="nav-link">
                         <span class="nav-icon material-symbols-rounded">bookmark</span>
                         <span class="nav-label">Saved</span>
                     </a>
@@ -72,21 +72,18 @@
 <main>
 
     
-    <form id="postForm">
+    <form id="postForm" novalidate>
         <h1>Create a Post</h1>
         <!-- File input for image/video -->
-        <label for="file" class="file-label">
-            <span class="material-symbols-rounded">add</span>
-        </label>
-        <input type="file" id="file" name="file" accept="image/*,video/*" required style="display:none;">
+        <input type="file" id="file" name="file" accept="image/*,video/*" required >
         <br>
         <!-- Input for caption -->
         <label for="caption">Caption</label><br>
-        <textarea id="caption" name="caption" rows="4" cols="50" required></textarea><br><br>
+        <textarea id="caption" name="caption" rows="4" cols="50" required  placeholder="please add a caption" ></textarea><br><br>
         <label for="hashtags">Hashtags</label><br>
-        <textarea id="hashtags" name="hashtags" rows="4" cols="50" required></textarea><br><br>
+        <textarea id="hashtags" name="hashtags" rows="4" cols="50" required placeholder="include # in the infront and for more than two hashtags leave space and type  "></textarea><br><br>
 
-        <button type="submit">Post</button>
+        <button id="postButton" type="submit">Post</button>
     </form>
 </main>
 
