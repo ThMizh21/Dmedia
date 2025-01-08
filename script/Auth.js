@@ -75,7 +75,7 @@ form.addEventListener("submit", function (event) {
     }
 
     // Validate email
-    const emailPattern = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;  // Regex for basic email validation
+    const emailPattern = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;  
     if (!emailPattern.test(email.value)) {
         formIsValid = false;
         emailError.textContent = "Please enter a valid email address!";
@@ -114,6 +114,7 @@ form.addEventListener("submit", function (event) {
                     .then(() => {
                         showMessage("Account Created Successfully", 'signUpMessage');
                         form.reset(); // Reset the form after successful submission
+                        localStorage.setItem('uid', user.uid);
                         window.location.href = "pages/home.html";
                     })
                     .catch((error) => {

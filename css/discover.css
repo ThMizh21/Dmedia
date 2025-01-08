@@ -331,7 +331,7 @@ main{
     scrollbar-width: none;
     width: calc(100% - 26px);
     max-height: calc(100vh - 26px);
-    margin-top:-100px ;
+    margin-top:10px ;
   }
 
   .sidebar.menu-active {
@@ -388,4 +388,11 @@ main{
 
   }
 
+  
+  .search-container {
+    margin: 20px;
+    display: flex;
+    width: auto;
+    margin-top: 100px;
+}
 }
