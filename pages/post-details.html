@@ -6,9 +6,85 @@
   <title>Post Details</title>
   <link rel="stylesheet" href="../css/post-details.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+
 
 </head>
-<body>
+<body><aside class="sidebar">
+  <!-- Sidebar header -->
+  <header class="sidebar-header">
+      <a href="#" class="header-logo">
+          <img id="logo-full" src="../assets/images/logo_white.png" alt="Collapsed Logo">
+      </a>
+      <button class="toggler sidebar-toggler">
+          <span class="material-symbols-rounded">chevron_left</span>
+      </button>
+      <button class="toggler menu-toggler">
+          <span class="material-symbols-rounded">menu</span>
+      </button>
+  </header>
+
+  <nav class="sidebar-nav">
+      <!-- Primary top nav -->
+      <ul class="nav-list primary-nav">
+          <li class="nav-item">
+              <a href="./home.html" class="nav-link">
+                  <span class="nav-icon material-symbols-rounded">Home</span>
+                  <span class="nav-label">Home</span>
+              </a>
+              <span class="nav-tooltip">Home</span>
+          </li>
+          <li class="nav-item">
+              <a href="./discover.html" class="nav-link">
+                  <span class="nav-icon material-symbols-rounded">Search</span>
+                  <span class="nav-label">Discover</span>
+              </a>
+              <span class="nav-tooltip">Discover</span>
+          </li>
+          <li class="nav-item">
+              <a href="./message.html" class="nav-link">
+                  <span class="nav-icon material-symbols-rounded">Chat</span>
+                  <span class="nav-label">Chat</span>
+              </a>
+              <span class="nav-tooltip">Chat</span>
+          </li>
+          <li class="nav-item">
+              <a href="./upload.html" class="nav-link">
+                  <span class="nav-icon material-symbols-rounded">upload</span>
+                  <span class="nav-label">New</span>
+              </a>
+              <span class="nav-tooltip">New</span>
+          </li>
+          <li class="nav-item">
+              <a href="./saved.html" class="nav-link">
+                  <span class="nav-icon material-symbols-rounded">bookmark</span>
+                  <span class="nav-label">Saved</span>
+              </a>
+              <span class="nav-tooltip">Saved</span>
+          </li>
+      </ul>
+
+       <!-- Secondary bottom nav -->
+       <ul class="nav-list secondary-nav">
+        <li class="nav-item">
+            <a href="./profile.html" class="nav-link">
+                <span class="nav-icon material-symbols-rounded">account_circle</span>
+                <span class="nav-label">Profile</span>
+            </a>
+            <span class="nav-tooltip">Profile</span>
+        </li>
+        <li class="nav-item signOut" > 
+            <button onclick="signOut()" id="signOut" href="#" class="nav-link">
+                <span class="nav-icon material-symbols-rounded">logout</span>
+                <span class="nav-label">Logout</span>
+            </button>
+            <span class="nav-tooltip">Logout</span>
+        </li>
+    </ul>
+ </nav>
+     </aside>
+
+     <main>
     <div id="post-details">
         <div id="post-head"></div> <!-- Add this div to match the JS code -->
         <div id="post-content">
@@ -16,8 +92,6 @@
             <!-- Post content will be injected here -->
         </div>
     </div>
-    <button id="back-button"><i class="fa-sharp fa-solid fa-arrow-left"></i></button>
-
     <!-- Modal for Comments -->
 <div id="comment-modal" class="modal">
     <div class="modal-content">
@@ -28,6 +102,7 @@
       <button id="submit-comment">Post Comment</button>
     </div>
   </div>
+</main>
   
 </body>
 <script type="module" src="../script/post-details.js"></script> <!-- Include your JS file here -->

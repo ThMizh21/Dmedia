@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove ,query,where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove ,query,where , orderBy } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Firebase config
@@ -190,7 +190,8 @@ async function fetchPosts() {
 
   try {
     const postsCollectionRef = collection(db, "posts");
-    const querySnapshot = await getDocs(postsCollectionRef);
+    const q = query(postsCollectionRef, orderBy("date_of_post", "desc")); // Order by date_of_post in descending order
+    const querySnapshot = await getDocs(q);
 
     // Clear the current posts before re-rendering the updated posts
     const postContainer = document.getElementById("postContainer");
@@ -324,9 +325,9 @@ async function fetchPosts() {
         dateDiv.classList.add("post-date");
         if (date_of_post) {
           const postDate = new Date(date_of_post.seconds * 1000); // Firestore timestamp conversion
-          const formattedDate = postDate.toLocaleString(); // Format as desired
+          const formattedDate = timeAgo(postDate); // Get relative time
           dateDiv.textContent = formattedDate;
-          dateDiv.style.color ="grey"
+          dateDiv.style.color = "grey";
         }
 
         cDDiv.appendChild(captionDiv);
@@ -345,7 +346,28 @@ async function fetchPosts() {
   }
 }
 
+// Function to calculate relative time
+function timeAgo(date) {
+  const now = new Date();
+  const secondsPast = (now.getTime() - date.getTime()) / 1000;
 
+  if (secondsPast < 60) {
+    return `${Math.floor(secondsPast)} seconds ago`;
+  }
+  if (secondsPast < 3600) {
+    return `${Math.floor(secondsPast / 60)} minutes ago`;
+  }
+  if (secondsPast < 86400) {
+    return `${Math.floor(secondsPast / 3600)} hours ago`;
+  }
+  if (secondsPast < 2592000) {
+    return `${Math.floor(secondsPast / 86400)} days ago`;
+  }
+  if (secondsPast < 31536000) {
+    return `${Math.floor(secondsPast / 2592000)} months ago`;
+  }
+  return `${Math.floor(secondsPast / 31536000)} years ago`;
+}
 
 // Toggle the like status of a post and update the icon
 async function toggleLikePost(postId, likes, likeIcon) {
@@ -374,6 +396,7 @@ async function toggleLikePost(postId, likes, likeIcon) {
 
   // Re-fetch posts to update the like count
   fetchPosts();
+  fetchUserProfile();
 }
 
 // Save or unsave the post by updating the user's savedPosts array
@@ -411,6 +434,8 @@ const totalUsersCount = document.getElementById("totalUsersCount");
 const totalPostsCount = document.getElementById("totalPostsCount");
 const popularHashtags = document.getElementById("popularHashtags");
 const popularHashtagsList = document.getElementById("popularHashtagsList");
+const postsLiked = document.getElementById("postsLiked");
+const postsCommented = document.getElementById("postsCommented");
 
 // Fetch user profile details
 async function fetchUserProfile() {
@@ -444,14 +469,50 @@ async function fetchUserProfile() {
       if (userPostsCount) {
         userPostsCount.textContent = `Number of posts: ${userPosts.length}`;
       }
+
+      // Initialize counters
+      let totalLikedPosts = 0;
+      let totalCommentedPosts = 0;
+
+      // Fetch all posts to check for likes and comments by the user
+      const allPostsSnap = await getDocs(collection(db, "posts"));
+      allPostsSnap.forEach((doc) => {
+        const postData = doc.data();
+        const { likes, comments } = postData;
+
+        // Check if the logged-in user's UID is in the likes array
+        if (likes && likes.includes(currentUserId)) {
+          totalLikedPosts++;
+        }
+
+        // Check if the logged-in user's UID is in the comments array
+        if (comments && comments.some(comment => comment.userId === currentUserId)) {
+          totalCommentedPosts++;
+        }
+      });
+
+      // Display the posts liked by the user
+      if (postsLiked) {
+        postsLiked.textContent = `Posts Liked: ${totalLikedPosts}`;
+      } else {
+        console.error("Element with id 'postsLiked' not found.");
+      }
+
+      // Display the posts commented by the user
+      if (postsCommented) {
+        postsCommented.textContent = `Posts Commented: ${totalCommentedPosts}`;
+      } else {
+        console.error("Element with id 'postsCommented' not found.");
+      }
     } else {
-      console.warn("User profile does not exist.");
+      console.error("User profile does not exist.");
     }
   } catch (error) {
     console.error("Error fetching user profile:", error);
     alert("An error occurred while fetching your profile. Please try again later.");
   }
 }
+
 
 async function fetchAppStats() {
   try {
@@ -499,7 +560,8 @@ async function fetchAppStats() {
       sortedHashtags.forEach((value, key) => {
         if (count < 5) {
           const hashtagItem = document.createElement("li");
-          hashtagItem.textContent = `#${key} (${value})`;
+          const discoverPageUrl = `./discover.html?hashtag=${encodeURIComponent(key)}`;
+          hashtagItem.innerHTML = `<a href="${discoverPageUrl}">#${key} (${value})</a>`;
           popularHashtagsList.appendChild(hashtagItem);
           count++;
         }
@@ -510,6 +572,7 @@ async function fetchAppStats() {
     alert("An error occurred while fetching app stats. Please try again later.");
   }
 }
+
 
 // Logout Functionality
 const logoutButton = document.getElementById("signOut");

@@ -121,7 +121,7 @@ async function fetchPostDetails() {
     dateDiv.classList.add("post-date");
     if (date_of_post) {
       const postDate = new Date(date_of_post.seconds * 1000); // Firestore timestamp conversion
-      const formattedDate = postDate.toLocaleString(); // Format as desired
+      const formattedDate = timeAgo(postDate); // Get relative time
       dateDiv.textContent = formattedDate;
     }
     postDiv.appendChild(dateDiv);
@@ -203,7 +203,7 @@ async function toggleLikePost(postId, likes, likeIcon) {
     }
 
     // Optionally update the like count dynamically
-    await updateLikeCount(postId);  // Re-fetch the updated like count
+    window.location.reload();  // Reload the page to reflect the updated like count
 
   } catch (error) {
     console.error("Error toggling like:", error);
@@ -399,6 +399,29 @@ async function toggleSavePost(postId, saveIcon) {
   }
 }
 
+// Function to calculate relative time
+function timeAgo(date) {
+  const now = new Date();
+  const secondsPast = (now.getTime() - date.getTime()) / 1000;
+
+  if (secondsPast < 60) {
+    return `${Math.floor(secondsPast)} seconds ago`;
+  }
+  if (secondsPast < 3600) {
+    return `${Math.floor(secondsPast / 60)} minutes ago`;
+  }
+  if (secondsPast < 86400) {
+    return `${Math.floor(secondsPast / 3600)} hours ago`;
+  }
+  if (secondsPast < 2592000) {
+    return `${Math.floor(secondsPast / 86400)} days ago`;
+  }
+  if (secondsPast < 31536000) {
+    return `${Math.floor(secondsPast / 2592000)} months ago`;
+  }
+  return `${Math.floor(secondsPast / 31536000)} years ago`;
+}
+
 // Fetch and display the post details on page load
 window.onload = fetchPostDetails;
 
@@ -412,3 +435,21 @@ document.getElementById("back-button").addEventListener("click", function() {
     window.location.href = "index.html";  // Change this to your desired default page
   }
 });
+
+
+// Logout Functionality
+const logoutButton = document.getElementById("signOut");
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out successfully.");
+        localStorage.removeItem("uid");  // Optionally clear local storage if used
+        window.location.href = "../../index.html"; // Redirect to login page
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
+  });
+}

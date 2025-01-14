@@ -35,6 +35,7 @@ async function getUserDetails(username) {
         if (doc.data().username === username) {
             userDetails = doc.data();
             userDetails.id = doc.id;  // Add user ID for reference
+            console.log("User details:", userDetails.id);
         }
     });
 
@@ -137,6 +138,25 @@ function displayUserProfile(userDetails) {
                 handleFollowButtonClick(userDetails.id, followButton);
             });
         });
+
+        // Assuming the message button is already selected
+const messageButton = document.getElementById("message");
+
+messageButton.addEventListener("click", () => {
+    const targetUserId = userDetails.id;  // Make sure targetUserId is correctly assigned
+    if (!targetUserId) {
+        console.error("Target User ID is missing.");
+        return;
+    }
+
+    // Construct the URL for the chat page, appending the target user UID
+    const url = `../html/message.html?uid=${encodeURIComponent(targetUserId)}`;
+
+    // Redirect to the chat page with the UID in the query string
+    window.location.href = url;
+});
+
+
     } else {
         console.error("User not found.");
     }
@@ -160,13 +180,13 @@ async function displayUserPosts(userId) {
             const post = doc.data();
             const postDiv = document.createElement('div');
             postDiv.classList.add('post-item');
-            
+
             if (post.post) {
                 const postImg = document.createElement('img');
                 postImg.src = post.post;
-                postImg.style.width = '250px'; 
-                postImg.style.height = '250px'; 
-                postImg.style.objectFit = 'cover'; 
+                postImg.style.width = '250px';
+                postImg.style.height = '250px';
+                postImg.style.objectFit = 'cover';
 
                 // Add redirection on image click
                 postImg.addEventListener('click', () => {
@@ -191,3 +211,20 @@ window.onload = async () => {
         displayUserPosts(userDetails.id);
     }
 };
+
+// Logout Functionality
+const logoutButton = document.getElementById("signOut");
+
+if (logoutButton) {
+    logoutButton.addEventListener("click", () => {
+        signOut(auth)
+            .then(() => {
+                console.log("User signed out successfully.");
+                localStorage.removeItem("uid");  // Optionally clear local storage if used
+                window.location.href = "../../index.html"; // Redirect to login page
+            })
+            .catch((error) => {
+                console.error("Error signing out:", error);
+            });
+    });
+}

@@ -17,7 +17,7 @@ const confirmPasswordError = document.getElementById("confirmPasswordError");
 // Firebase setup
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, setDoc, doc , getDocs, query, collection, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
@@ -35,7 +35,7 @@ const auth = getAuth();
 const db = getFirestore();
 
 // Show message function for success/error feedback
-function showMessage(message, divId) {
+async function showMessage(message, divId) {
     var messageDiv = document.getElementById(divId);
     messageDiv.style.display = "block";
     messageDiv.innerHTML = message;
@@ -45,8 +45,15 @@ function showMessage(message, divId) {
     }, 5000);
 }
 
+// Function to check if the username exists in Firestore
+async function checkUsernameExists(username) {
+    const q = query(collection(db, "users"), where("username", "==", username));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty; // Returns true if username exists
+}
+
 // Sign up form submission handler
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     // Clear previous error messages
@@ -64,14 +71,21 @@ form.addEventListener("submit", function (event) {
         nameError.textContent = "Name is required!";
     }
 
-    // Validate username (should not contain spaces)
-    if (/\s/.test(username.value)) {
+      // Validate username (should not contain spaces)
+      if (/\s/.test(username.value)) {
         formIsValid = false;
         usernameError.textContent = "Username should not contain spaces!";
     }
-    if (username.value.length <3) {
+    if (username.value.length < 3) {
         formIsValid = false;
         usernameError.textContent = "Username should be more than 3 characters.";
+    }
+    
+    // Check if the username already exists
+    const usernameExists = await checkUsernameExists(username.value);
+    if (usernameExists) {
+        formIsValid = false;
+        usernameError.textContent = "Username is already taken!";
     }
 
     // Validate email
@@ -113,7 +127,7 @@ form.addEventListener("submit", function (event) {
                 setDoc(docRef, userData)
                     .then(() => {
                         showMessage("Account Created Successfully", 'signUpMessage');
-                        form.reset(); // Reset the form after successful submission
+                        form.reset();
                         localStorage.setItem('uid', user.uid);
                         window.location.href = "pages/home.html";
                     })

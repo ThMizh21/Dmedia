@@ -169,9 +169,10 @@ saveProfileBtn.addEventListener('click', async () => {
     }
 
     // Validate Username
-    if (newUsername.trim().length < 3 || newUsername.trim().length > 12) {
+    const usernameRegex = /^[a-zA-Z0-9_-]{3,12}$/;
+    if (!usernameRegex.test(newUsername.trim())) {
         isValid = false;
-        showError(editUsernameInput, 'Username must be between 3 and 12 characters.');
+        showError(editUsernameInput, 'Username must be between 3 and 12 characters and can only contain letters, numbers, underscores (_), and hyphens (-).');
     }
 
     // Validate Bio
@@ -248,3 +249,21 @@ function showError(inputField, errorMessage) {
 cancelEditBtn.addEventListener('click', () => {
     editProfileModal.style.display = 'none';
 });
+
+
+// Logout Functionality
+const logoutButton = document.getElementById("signOut");
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out successfully.");
+        localStorage.removeItem("uid");  // Optionally clear local storage if used
+        window.location.href = "../../index.html"; // Redirect to login page
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
+  });
+}
