@@ -68,6 +68,21 @@ postForm.addEventListener('submit', async (event) => {
         return;
     }
 
+    // Check if any hashtag is longer than 18 characters
+    if (hashtags.some(tag => tag.length > 18)) {
+        alert('Each hashtag must be no longer than 18 characters.');
+        return;
+    }
+
+    // Check if the total length of all hashtags combined exceeds 180 characters
+    const totalHashtagsLength = hashtags.reduce((total, tag) => total + tag.length, 0);
+    if (totalHashtagsLength > 160) {
+        alert('The total length of all hashtags combined must not exceed 160 characters.');
+        return;
+    }
+
+    // Proceed with the rest of the code if all validations pass
+
     // Disable the post button to prevent double submission
     postButton.disabled = true;
 
@@ -133,3 +148,21 @@ postForm.addEventListener('input', () => {
         postButton.disabled = false;
     }
 });
+
+
+// Logout Functionality
+const logoutButton = document.getElementById("signOut");
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out successfully.");
+        localStorage.removeItem("uid");  // Optionally clear local storage if used
+        window.location.href = "../../index.html"; // Redirect to login page
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
+  });
+}
