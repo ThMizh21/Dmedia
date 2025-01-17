@@ -1,6 +1,6 @@
 // Import Firebase services
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, getDocs, updateDoc, arrayUnion, arrayRemove, query, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 // Firebase config and initialization
@@ -16,30 +16,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Get URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const targetUserId = urlParams.get("uid");
+const targetUserName = urlParams.get("username");
+
 // Initialize Firebase Authentication
 const auth = getAuth();
 
-// Fetch username from URL
-function getUsernameFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("username");
-}
-
-// Fetch user details from Firestore
-async function getUserDetails(username) {
-    const usersCollectionRef = collection(db, "users");
-    const querySnapshot = await getDocs(usersCollectionRef);
-    let userDetails = null;
-
-    querySnapshot.forEach((doc) => {
-        if (doc.data().username === username) {
-            userDetails = doc.data();
-            userDetails.id = doc.id;  // Add user ID for reference
-            console.log("User details:", userDetails.id);
-        }
-    });
-
-    return userDetails;
+// Fetch user details from Firestore using UID
+async function getUserDetails(uid) {
+    const userRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+        const userDetails = userSnap.data();
+        userDetails.id = userSnap.id;  // Add user ID for reference
+        console.log("User details:", userDetails.id);
+        return userDetails;
+    } else {
+        console.error("User not found.");
+        return null;
+    }
 }
 
 // Fetch the logged-in user's UID
@@ -139,23 +136,15 @@ function displayUserProfile(userDetails) {
             });
         });
 
-        // Assuming the message button is already selected
-const messageButton = document.getElementById("message");
-
-messageButton.addEventListener("click", () => {
-    const targetUserId = userDetails.id;  // Make sure targetUserId is correctly assigned
-    if (!targetUserId) {
-        console.error("Target User ID is missing.");
-        return;
-    }
-
-    // Construct the URL for the chat page, appending the target user UID
-    const url = `../html/message.html?uid=${encodeURIComponent(targetUserId)}`;
-
-    // Redirect to the chat page with the UID in the query string
-    window.location.href = url;
-});
-
+        // Set up the "Message" button to redirect to chat page with target user UID and username
+        const messageButton = document.getElementById("messageButton");
+        if (messageButton) {
+            messageButton.addEventListener("click", () => {
+                window.location.href = `../pages/chat.html?uid=${encodeURIComponent(targetUserId)}&username=${encodeURIComponent(targetUserName)}`;
+            });
+        } else {
+            console.error("Message button not found.");
+        }
 
     } else {
         console.error("User not found.");
@@ -204,11 +193,14 @@ async function displayUserPosts(userId) {
 
 // Handle document ready and loading profile and posts
 window.onload = async () => {
-    const username = getUsernameFromURL();
-    if (username) {
-        const userDetails = await getUserDetails(username);
-        displayUserProfile(userDetails);
-        displayUserPosts(userDetails.id);
+    if (targetUserId) {
+        const userDetails = await getUserDetails(targetUserId);
+        if (userDetails) {
+            displayUserProfile(userDetails);
+            displayUserPosts(userDetails.id);
+        }
+    } else {
+        console.error("User ID not found in URL.");
     }
 };
 

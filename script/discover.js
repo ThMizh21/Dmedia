@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, getDoc, doc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { signOut  } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 
 // Firebase configuration and initialization
 const firebaseConfig = {
@@ -23,15 +24,17 @@ const resultsContainer = document.getElementById('results-container');
 // Event listener for input change
 searchInput.addEventListener('input', searchUsersAndPosts);
 
-// Function to search users and posts based on input
 async function searchUsersAndPosts() {
     const queryValue = searchInput.value.trim();
 
     // Clear previous results
     resultsContainer.innerHTML = '';
 
-    // If the query is empty, return early
-    if (!queryValue) return;
+    // If the query is empty, fetch and display all posts
+    if (!queryValue) {
+        fetchAndDisplayPosts();  // Call function to display all posts
+        return;
+    }
 
     try {
         // If the query starts with '#', search for posts (hashtags)
@@ -47,6 +50,37 @@ async function searchUsersAndPosts() {
         resultsContainer.innerHTML = '<p>An error occurred while searching. Please try again later.</p>';
     }
 }
+
+
+// Fetch and display all posts in a random order
+async function fetchAndDisplayPosts() {
+    const postsRef = collection(db, 'posts');
+
+    try {
+        const snapshot = await getDocs(postsRef);
+
+        if (snapshot.empty) {
+            resultsContainer.innerHTML = '<p>No posts found.</p>';
+            return;
+        }
+
+        // Convert snapshot to an array of posts and shuffle it
+        const postsArray = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        // Shuffle posts array for random order
+        const shuffledPosts = postsArray.sort(() => Math.random() - 0.5);
+
+        // Display each post
+        shuffledPosts.forEach(post => {
+            renderPost(post, post.id); // Pass post data and post ID
+        });
+
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        resultsContainer.innerHTML = '<p>An error occurred while fetching posts. Please try again later.</p>';
+    }
+}
+
 
 // Function to search users by username or name
 async function searchUsers(queryValue) {
@@ -70,7 +104,7 @@ async function searchUsers(queryValue) {
             const userElement = document.createElement('div');
             userElement.classList.add('user-item');
             userElement.innerHTML = `
-                <a href="./userprofile.html?username=${data.username}">
+                <a href="./userprofile.html?username=${data.username} &uid=${doc.id}">
                     <div class="user-box">
                         <img src="${data.profile || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg'}" alt="Profile Image" class="profile-image">
                         <div class="user-info">
@@ -170,6 +204,8 @@ async function searchPosts(queryValue) {
         resultsContainer.innerHTML += '<p>An error occurred while searching for posts. Please try again.</p>';
     }
 }
+
+fetchAndDisplayPosts();
 
 
 // Logout Functionality

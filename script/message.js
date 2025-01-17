@@ -1,122 +1,104 @@
-// Firebase initialization
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getDatabase, ref, set, onChildAdded } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+// Firebase configuration
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+import { getAuth ,signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-// Firebase Configuration (Replace with your Firebase config)
+// Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
-    authDomain: "dmedia-2c144.firebaseapp.com",
-    projectId: "dmedia-2c144",
-    storageBucket: "dmedia-2c144.appspot.com",
-    messagingSenderId: "636638599757",
-    appId: "1:636638599757:web:01c82ddff12b4d2ba45a04",
-    measurementId: "G-WSJN8XVXWJ"
+  apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
+  authDomain: "dmedia-2c144.firebaseapp.com",
+  databaseURL: "https://dmedia-2c144-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  projectId: "dmedia-2c144",
+  storageBucket: "dmedia-2c144.appspot.com",
+  messagingSenderId: "636638599757",
+  appId: "1:636638599757:web:01c82ddff12b4d2ba45a04"
 };
 
-// Initialize Firebase app and services
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth();
+const database = getDatabase(app);
+const auth = getAuth(app);
+const firestore = getFirestore(app);
 
-// Authenticate a test user (for demonstration)
-signInAnonymously(auth).catch((error) => {
-    console.error("Error signing in:", error);
-});
-
-// Listen for changes in authentication state (to get the logged-in user's UID)
-let loggedUserUID = null;
-
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        loggedUserUID = user.uid; // Get the logged-in user's UID
-        console.log("Logged in as:", loggedUserUID);
-    } else {
-        console.log("No user is logged in.");
-    }
-});
-
-// Get the target user UID from the URL (profile page)
-const urlParams = new URLSearchParams(window.location.search);
-const targetedUserUID = urlParams.get("uid");  // Get the 'uid' query parameter from the URL
-
-// If no UID is provided in the URL, we can either show an error or prompt the user
-if (!targetedUserUID) {
-    console.error("No target UID found in URL.");
+// Function to get the logged-in user's UID from local storage
+function getLoggedInUserId() {
+  return localStorage.getItem("uid");
 }
 
-// Send message function
-document.getElementById("sendMessageButton").addEventListener("click", function () {
-    const message = document.getElementById("messageInput").value;
+// Function to fetch user details from Firestore
+async function getUserDetails(uid) {
+  const userRef = doc(firestore, "users", uid);
+  const userSnap = await getDoc(userRef);
+  if (userSnap.exists()) {
+    return userSnap.data();
+  } else {
+    console.error("User not found in Firestore.");
+    return null;
+  }
+}
 
-    // Ensure the logged user and message are valid
-    if (loggedUserUID && targetedUserUID && message.trim()) {
-        const messageId = generateMessageId(loggedUserUID, targetedUserUID); // Generate unique message ID
-        const messageData = {
-            from: loggedUserUID,
-            to: targetedUserUID,
-            message: message, // No encryption
-            timestamp: Date.now(),
-        };
+// Function to fetch all chat records for the logged-in user
+async function displayUserChats() {
+  const loggedInUserId = getLoggedInUserId();
+  if (!loggedInUserId) {
+    console.error("User is not logged in.");
+    return;
+  }
 
-        sendMessageToFirebase(messageId, messageData)
-            .then(() => {
-                console.log("Message sent successfully!");
-                document.getElementById("messageInput").value = ""; // Clear the input field
-            })
-            .catch((error) => {
-                console.error("Error sending message:", error);
+  const chatContainer = document.getElementById("chat-container");
+
+  // Reference to the chats node
+  const chatsRef = ref(database, "dmedia/chats");
+
+  onValue(chatsRef, async (snapshot) => {
+    chatContainer.innerHTML = ""; // Clear the container before displaying new chats
+
+    const chatPromises = []; // Create an array to hold all the promises for fetching user details
+
+    snapshot.forEach((chatSnapshot) => {
+      const chatId = chatSnapshot.key; // This will be something like uid1_uid2
+      const [uid1, uid2] = chatId.split("_");
+
+      // Check if either UID matches the logged-in user's UID
+      if (uid1 === loggedInUserId || uid2 === loggedInUserId) {
+        // Fetch the other user's UID
+        const otherUserId = uid1 === loggedInUserId ? uid2 : uid1;
+
+        // Push the promise of fetching user details for the other user
+        chatPromises.push(
+          getUserDetails(otherUserId).then((userData) => {
+            const otherUserName = userData ? userData.username : "Unknown User"; // Use a default name if user doesn't exist
+            const profileImage = userData && userData.profile ? userData.profile : "https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg"; // Default profile image
+
+            // Create a chat entry in the UI
+            const chatItem = document.createElement("div");
+            chatItem.classList.add("chat");
+            chatItem.innerHTML = `
+              <img src="${profileImage}" alt="${otherUserName}'s profile image" class="profile-img" >
+              <span class="chat-user">${otherUserName}</span>
+            `;
+
+            // Add event listener to the chat item to open the chat
+            chatItem.addEventListener("click", () => {
+              window.location.href = `chat.html?uid=${encodeURIComponent(otherUserId)}`;
             });
-    } else {
-        console.log("Message or user data is invalid.");
-    }
-});
 
-// Generate a unique message ID based on user UIDs
-function generateMessageId(uid1, uid2) {
-    return uid1 < uid2 ? uid1 + "_" + uid2 : uid2 + "_" + uid1;
-}
-
-// Firebase function to send a message with promise-based error handling
-function sendMessageToFirebase(messageId, messageData) {
-    return new Promise((resolve, reject) => {
-        const messageRef = ref(db, 'messages/' + messageId);
-        set(messageRef, messageData)
-            .then(() => {
-                resolve(); // Successfully written to Firebase
-            })
-            .catch((error) => {
-                reject("Error sending message to Firebase: " + error.message);
-            });
+            chatContainer.appendChild(chatItem); // Append the chat item to the container
+          })
+        );
+      }
     });
+
+    // Wait for all promises to resolve before finishing
+    await Promise.all(chatPromises);
+  });
 }
 
-// Firebase function to listen for new messages (Real-time listener)
-function listenForMessages() {
-    const messagesRef = ref(db, 'messages');
-
-    onChildAdded(messagesRef, (snapshot) => {
-        const messageData = snapshot.val();
-        if (messageData) {
-            displayMessage(messageData);
-        }
-    }, (error) => {
-        console.error("Error listening for messages: " + error.message);
-    });
-}
-
-// Function to display messages
-function displayMessage(messageData) {
-    const messageElement = document.createElement("div");
-    messageElement.textContent = `From: ${messageData.from}, Message: ${messageData.message}`;
-    document.getElementById("messagesContainer").appendChild(messageElement);
-}
-
-// Start listening for new messages when the page loads
-window.onload = function () {
-    listenForMessages();
+// Run the function on page load
+window.onload = () => {
+  displayUserChats(); // Display all chats for the logged-in user
 };
-
 
 // Logout Functionality
 const logoutButton = document.getElementById("signOut");

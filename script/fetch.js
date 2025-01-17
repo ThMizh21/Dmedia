@@ -231,7 +231,17 @@ async function fetchPosts() {
         const userNameDiv = document.createElement("a");
         userNameDiv.classList.add("userName");
         userNameDiv.textContent = username;
-        userNameDiv.href = `userprofile.html?username=${username}`;
+
+        // Get the UID stored in local storage
+        const storedUid = localStorage.getItem("uid");
+
+        // Check if the UID is the same as the stored UID
+        if (userId === storedUid) {
+            userNameDiv.href = `profile.html`;
+        } else {
+            userNameDiv.href = `userprofile.html?username=${encodeURIComponent(username)}&uid=${encodeURIComponent(userId)}`;
+        }
+
         userNameDiv.style.textDecoration = "none"
 
         cHeadDiv.appendChild(userImg);
@@ -561,7 +571,7 @@ async function fetchAppStats() {
         if (count < 5) {
           const hashtagItem = document.createElement("li");
           const discoverPageUrl = `./discover.html?hashtag=${encodeURIComponent(key)}`;
-          hashtagItem.innerHTML = `<a href="${discoverPageUrl}">#${key} (${value})</a>`;
+          hashtagItem.innerHTML = `<a href="${discoverPageUrl}">#${key}</a>`;
           popularHashtagsList.appendChild(hashtagItem);
           count++;
         }
