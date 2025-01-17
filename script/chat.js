@@ -1,7 +1,8 @@
-// Firebase configuration
+// Firebase initialization code (make sure it's executed before any Firebase calls)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getAuth,signOut  } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -18,23 +19,51 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
+const firestore = getFirestore(app);
 
 // Function to get the target user's UID from the URL
 function getTargetUserDetailsFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
-  const targetUserId = urlParams.get("uid");  // Retrieve the target user's UID
+  const targetUserId = urlParams.get("uid");  // Retrieve the target user's UID from URL
   return { targetUserId };
 }
 
-// Window onload event to ensure proper initialization
-window.onload = () => {
+// Function to fetch user details from Firestore
+async function getUserDetails(uid) {
+  const userRef = doc(firestore, "users", uid);
+  const userSnap = await getDoc(userRef);
+  if (userSnap.exists()) {
+    return userSnap.data();
+  } else {
+    console.error("User not found in Firestore.");
+    return null;
+  }
+}
+
+// Encryption and Decryption functions
+const secretKey = "ThMizh@2116"; // Replace with your own secret key
+
+function encryptMessage(message) {
+  return CryptoJS.AES.encrypt(message, secretKey).toString();
+}
+
+function decryptMessage(encryptedMessage) {
+  const bytes = CryptoJS.AES.decrypt(encryptedMessage, secretKey);
+  return bytes.toString(CryptoJS.enc.Utf8);
+}
+
+window.onload = async () => {
   const { targetUserId } = getTargetUserDetailsFromURL();  // Get the target user's UID
 
   if (targetUserId) {
     console.log("Target User UID:", targetUserId);
 
-    // Display target user's name in the chat header (you may need to retrieve user details)
-    document.getElementById("targetUserName").innerText = `Chat with User ${targetUserId}`;
+    // Fetch target user's details from Firestore
+    const userDetails = await getUserDetails(targetUserId);
+    const targetUserName = userDetails ? userDetails.username : "Unknown User";
+
+    // Display target user's name in the chat header
+    document.getElementById("targetUserName").innerText = `Chat with ${targetUserName}`;
 
     // DOM elements
     const chatWindow = document.getElementById("chatWindow");
@@ -53,15 +82,17 @@ window.onload = () => {
     sendMessageButton.addEventListener("click", () => {
       const message = messageInput.value.trim();
       if (message) {
+        const encryptedMessage = encryptMessage(message); // Encrypt the message
         const sortUser = [currentUserId, targetUserId].sort().join("_");
         const chatRef = ref(database, `dmedia/chats/${sortUser}`);
         push(chatRef, {
           sender: currentUserId,
           receiver: targetUserId,
-          message: message,
+          message: encryptedMessage, // Store the encrypted message
           timestamp: Date.now()
         });
         messageInput.value = ""; // Clear the input field
+        sendMessageButton.disabled = true; // Disable the button again after sending
       }
     });
 
@@ -71,12 +102,49 @@ window.onload = () => {
       chatWindow.innerHTML = ""; // Clear the chat window
       snapshot.forEach((childSnapshot) => {
         const messageData = childSnapshot.val();
+        const decryptedMessage = decryptMessage(messageData.message); // Decrypt the message
+
         const messageElement = document.createElement("div");
-        messageElement.textContent = `${messageData.sender}: ${messageData.message}`;
+
+        // Check if the sender is the current user or the target user
+        if (messageData.sender === currentUserId) {
+          messageElement.classList.add("by-me"); // Add class 'by-me' for current user
+        } else {
+          messageElement.classList.add("by-others"); // Add class 'by-others' for others
+        }
+
+        messageElement.textContent = decryptedMessage; // Display the message text
         chatWindow.appendChild(messageElement);
       });
     });
+
+    // Enable/Disable sendMessageButton based on input field content
+    messageInput.addEventListener("input", () => {
+      if (messageInput.value.trim()) {
+        sendMessageButton.disabled = false; // Enable the button if there is text
+      } else {
+        sendMessageButton.disabled = true; // Disable the button if input is empty
+      }
+    });
+
   } else {
     console.error("Target User UID is missing in the URL.");
   }
 };
+
+// Logout Functionality
+const logoutButton = document.getElementById("signOut");
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", () => {
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out successfully.");
+        localStorage.removeItem("uid");  // Optionally clear local storage if used
+        window.location.href = "../../index.html"; // Redirect to login page
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
+  });
+}

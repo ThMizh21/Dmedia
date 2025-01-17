@@ -134,7 +134,7 @@
   
   .sidebar-nav .nav-link:hover {
     color: #104c8a;
-    background: #fff;
+    background: #fff !important;
   }
   
   .active{
@@ -206,6 +206,13 @@
   .post-thumbnail:hover {
     cursor: pointer;
   }
+
+  #signOut {
+    border: 1px solid transparent;
+    background-color: #104c8a;
+    width: 100%;
+  }
+  
   
   
   @media (max-width: 920px) {

@@ -135,7 +135,7 @@ body {
 
 .sidebar-nav .nav-link:hover {
   color: #104c8a;
-  background: #fff;
+  background: #fff !important;
 }
 
 #home1{
@@ -321,6 +321,13 @@ main{
   background-color:white;
   color: #104c8a !important; 
 }
+
+#signOut {
+  border: 1px solid transparent;
+  background-color: #104c8a;
+  width: 100%;
+}
+
 
 /* Responsive media query code for small screens */
 @media (max-width: 920px) {

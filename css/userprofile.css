@@ -298,8 +298,8 @@ body {
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #151A2D;
-  background: #fff;
+  color: #104c8a;
+  background: #fff !important;
 }
 
 .sidebar-nav .nav-item {
@@ -355,6 +355,12 @@ body {
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+#signOut {
+  border: 1px solid transparent;
+  background-color: #104c8a;
+  width: 100%;
 }
 
 /* Responsive media query code for small screens */
