@@ -12,6 +12,7 @@ body {
 
 .sidebar {
   position: fixed;
+  top: 0px;
   width: 330px;
   margin: 16px;
   border-radius: 16px;

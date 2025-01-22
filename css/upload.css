@@ -9,7 +9,7 @@
 
 body {
   min-height: 100vh;
-  background-color: white  ;
+  background-color: white;
 }
 
 .sidebar {
@@ -23,7 +23,6 @@ body {
   z-index: 10;
 }
 
-
 .sidebar.collapsed {
   width: 85px;
 }
@@ -36,17 +35,16 @@ body {
   justify-content: space-between;
 }
 
- #logo-full{
-  width: 120px; 
-  height: auto; 
+#logo-full {
+  width: 120px;
+  height: auto;
   display: block;
   object-fit: contain;
-  
 }
 
-#logo-collapsed{
-  width: 140px; 
-  height: auto; 
+#logo-collapsed {
+  width: 140px;
+  height: auto;
   display: block;
   object-fit: contain;
   margin-left: -48px;
@@ -137,7 +135,7 @@ body {
   background: #fff !important;
 }
 
-#home1{
+#home1 {
   color: #151A2D;
   background: #fff;
 }
@@ -179,93 +177,68 @@ body {
   width: 100%;
 }
 
-
-#home1{
-  color: #151A2D;
-  background: #fff;
-}
-
-.sidebar-nav .nav-item {
-  position: relative;
-}
-
-#upload1{
-    color: #151A2D;
-    background: #fff;
-}
-
 main {
-  margin-left: 600px;
-}
-h1{
-  padding-left: 80px;
-  padding-bottom: 50px;
-}
-
-#filelabel{
- padding-left: 20px;
- line-height: 40px;
-}
-
-.file-label {
-  display: inline-flex;
+  display: flex;
   justify-content: center;
-  align-items: center;
-  width: 60px;  /* Circle size */
-  height: 60px; /* Circle size */
-  border: 2px solid grey; /* Border color */
-  border-radius: 50%; /* Makes it a circle */
-  background-color: #fff; /* Circle background */
+  width: 800px;
+  margin-left: 400px;
+  flex-direction: column;
+}
+
+
+#postForm h1{
+  margin-top: -36px;
+  padding-bottom: 25px;
+}
+
+#postForm input{
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#postForm textarea{
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#postForm label{
+  margin-bottom: -27px;
+  margin-left: -320px;
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+#postForm button{
+  width: 100%;
+  padding: 10px;
+  margin-left: 0px ;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #104c8a;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
 }
 
-.file-label:hover {
-  background-color: #f0f0f0;  /* Circle background color on hover */
-  transform: scale(1.1); /* Slight zoom on hover */
+#postForm button:hover{
+  background-color: #0d3b6c;
 }
-
-.material-symbols-rounded {
-  font-size: 36px;  
-  color:white;   
-}
-
-.upload-plus{
-  columns: gray;
-}
-
-
-#file{
-  margin-bottom: 20px;
-
-}
-
-#caption , #hashtags{
-  resize: none;
-}
-
-#postButton{
-  font-size: 1em;
-    padding: 5px;
-    width: 100px;
-    margin-left: 125px;
-    background-color: #104c8a;
-    border: none;
-    color: white;
-    border-radius:8px ;
-}
-
-.active, .sidebar-nav .nav-link:hover  {
-  background-color:white;
-  color: #104c8a !important; 
-}
-
 #signOut {
   border: 1px solid transparent;
   background-color: #104c8a;
   width: 100%;
 }
 
+.active {
+  background-color: white;
+  color: #104c8a !important;
+}
 /* Responsive media query code for small screens */
 @media (max-width: 920px) {
   .sidebar {
@@ -275,7 +248,7 @@ h1{
     scrollbar-width: none;
     width: calc(100% - 26px);
     max-height: calc(100vh - 26px);
-    margin-top:-100px ;
+    margin-top: 10px;
   }
 
   .sidebar.menu-active {
@@ -300,7 +273,7 @@ h1{
   .sidebar-nav .nav-item:hover .nav-tooltip {
     display: none;
   }
-  
+
   .sidebar-header .menu-toggler {
     display: flex;
     height: 30px;
@@ -329,28 +302,146 @@ h1{
     position: relative;
     bottom: 0;
     margin: 40px 0 30px;
+  }
 
+  .active {
+    background-color: white;
+    color: #104c8a !important;
   }
-  .file-label {
-    display: inline-flex;
-    justify-content: center;
+
+  main {
+    width: 100%;
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  #postForm{
+    margin-left: 10px;
+    margin-top: 107px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    width: 60px;  /* Circle size */
-    height: 60px; /* Circle size */
-    border: 2px solid #104c8a; /* Border color */
-    border-radius: 50%; /* Makes it a circle */
-    background-color: #fff; /* Circle background */
+  }
+
+  #postForm h1{
+    margin-top: -36px;
+    padding-bottom: 25px;
+  }
+
+  #postForm input{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  #postForm textarea{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  #postForm label{
+    margin-bottom: -27px;
+    margin-left: -320px;
+    font-size: 1.2em;
+    font-weight: 700;
+  }
+
+  #postForm button{
+    width: 100%;
+    padding: 10px;
+    margin-left: 0px ;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #104c8a;
+    color: white;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
   }
-  
-  .file-label:hover {
-    background-color: #f0f0f0;  /* Circle background color on hover */
-    transform: scale(1.1); /* Slight zoom on hover */
+
+  #postForm button:hover{
+    background-color: #0d3b6c;
   }
-  
-  .material-symbols-rounded {
-    font-size: 36px;  /* Size of the plus icon */
-    color:white;   /* Color of the plus icon */
+
+  #signOut {
+    border: 1px solid transparent;
+    background-color: #104c8a;
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    height: 56px;
+    margin: 13px;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    width: calc(100% - 26px);
+    max-height: calc(100vh - 26px);
+    margin-top: 10px;
+  }
+
+  .sidebar.menu-active {
+    overflow-y: auto;
+  }
+
+  .sidebar .sidebar-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-radius: 16px;
+    background: #104c8a;
+    padding: 8px 10px;
+  }
+
+  .sidebar-header .header-logo img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .sidebar-header .sidebar-toggler,
+  .sidebar-nav .nav-item:hover .nav-tooltip {
+    display: none;
+  }
+
+  .sidebar-header .menu-toggler {
+    display: flex;
+    height: 30px;
+    width: 30px;
+  }
+
+  .sidebar-header .menu-toggler span {
+    font-size: 1.3rem;
+  }
+
+  .sidebar .sidebar-nav .nav-list {
+    padding: 0 10px;
+  }
+
+  .sidebar-nav .nav-link {
+    gap: 10px;
+    padding: 10px;
+    font-size: 0.94rem;
+  }
+
+  .sidebar-nav .nav-link .nav-icon {
+    font-size: 1.37rem;
+  }
+
+  .sidebar-nav .secondary-nav {
+    position: relative;
+    bottom: 0;
+    margin: 40px 0 30px;
+  }
+
+  main {
+    width: 100%;
+    margin-left: 0;
+    padding: 20px;
   }
 }
