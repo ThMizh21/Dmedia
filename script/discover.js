@@ -1,6 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, getDoc, doc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-import { signOut  } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 // Firebase configuration and initialization
 const firebaseConfig = {
@@ -15,7 +15,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const auth = getAuth(app);
+const firestore = getFirestore(app);
 
 // Get DOM elements
 const searchInput = document.getElementById('search-bar');
@@ -23,6 +24,31 @@ const resultsContainer = document.getElementById('results-container');
 
 // Event listener for input change
 searchInput.addEventListener('input', searchUsersAndPosts);
+
+// Function to get the hashtag from the URL (if it exists)
+function getHashtagFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('hashtag');  // Extract the hashtag parameter from the URL
+}
+
+// Function to handle search on page load if there's a hashtag in the URL
+function handleHashtagSearchOnLoad() {
+    const hashtagFromURL = getHashtagFromURL();
+
+    if (hashtagFromURL) {
+        // Set the hashtag in the search input
+        searchInput.value = `#${hashtagFromURL}`;
+
+        // Trigger the search
+        searchPosts(`#${hashtagFromURL}`);
+    } else {
+        // No hashtag, so fetch and display all posts
+        fetchAndDisplayPosts();
+    }
+}
+
+// Call this function when the page loads
+window.onload = handleHashtagSearchOnLoad;
 
 async function searchUsersAndPosts() {
     const queryValue = searchInput.value.trim();
@@ -51,10 +77,9 @@ async function searchUsersAndPosts() {
     }
 }
 
-
 // Fetch and display all posts in a random order
 async function fetchAndDisplayPosts() {
-    const postsRef = collection(db, 'posts');
+    const postsRef = collection(firestore, 'posts');
 
     try {
         const snapshot = await getDocs(postsRef);
@@ -81,10 +106,9 @@ async function fetchAndDisplayPosts() {
     }
 }
 
-
 // Function to search users by username or name
 async function searchUsers(queryValue) {
-    const usersRef = collection(db, 'users');
+    const usersRef = collection(firestore, 'users');
 
     // Search for users where username or name contains the query (case-insensitive)
     const userQuery = query(usersRef,
@@ -104,7 +128,7 @@ async function searchUsers(queryValue) {
             const userElement = document.createElement('div');
             userElement.classList.add('user-item');
             userElement.innerHTML = `
-                <a href="./userprofile.html?username=${data.username} &uid=${doc.id}">
+                <a href="./userprofile.html?username=${data.username}&uid=${doc.id}">
                     <div class="user-box">
                         <img src="${data.profile || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg'}" alt="Profile Image" class="profile-image">
                         <div class="user-info">
@@ -181,7 +205,7 @@ async function searchPosts(queryValue) {
         return;
     }
 
-    const postsRef = collection(db, 'posts');
+    const postsRef = collection(firestore, 'posts');
 
     try {
         const postQuery = query(postsRef, where("hashtags", "array-contains", hashtag));
@@ -204,9 +228,6 @@ async function searchPosts(queryValue) {
         resultsContainer.innerHTML += '<p>An error occurred while searching for posts. Please try again.</p>';
     }
 }
-
-fetchAndDisplayPosts();
-
 
 // Logout Functionality
 const logoutButton = document.getElementById("signOut");

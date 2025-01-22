@@ -37,7 +37,7 @@
                     <span class="nav-tooltip">Discover</span>
                 </li>
                 <li class="nav-item">
-                    <a href="./message.html" class="nav-link">
+                    <a href="./message.html" class="nav-link active">
                         <span class="nav-icon material-symbols-rounded">Chat</span>
                         <span class="nav-label">Chat</span>
                     </a>
@@ -81,16 +81,21 @@
     <main>
 
         <div class="container">
-            <header class="bg-white">
-                <span id="targetUserName" ></span>
-            </header>
-            <div id="chatWindow"> </div>
+            <div id="header" class="head">
+                <div id="targetUserProfile"></div>
+                <div id="targetUserName" ></div>
+            </div>
+            <div id="chatWindow"> 
+
+            </div>
             <div class="chatInput">
                 <input id="messageInput" type="text" placeholder="Type a message..."/>
                 <button id="sendMessageButton"> Send</button>
             </div>
         </div>
     </main>
+
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script type="module" src="../script/chat.js"></script>
 </body>

@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-
 * {
   margin: 0;
   padding: 0;
@@ -10,7 +9,7 @@
 
 body {
   min-height: 100vh;
-  background-color: white  ;
+  background-color: white;
 }
 
 .sidebar {
@@ -24,7 +23,6 @@ body {
   z-index: 10;
 }
 
-
 .sidebar.collapsed {
   width: 85px;
 }
@@ -37,17 +35,16 @@ body {
   justify-content: space-between;
 }
 
- #logo-full{
-  width: 120px; 
-  height: auto; 
+#logo-full {
+  width: 120px;
+  height: auto;
   display: block;
   object-fit: contain;
-  
 }
 
-#logo-collapsed{
-  width: 140px; 
-  height: auto; 
+#logo-collapsed {
+  width: 140px;
+  height: auto;
   display: block;
   object-fit: contain;
   margin-left: -48px;
@@ -138,7 +135,7 @@ body {
   background: #fff !important;
 }
 
-#home1{
+#home1 {
   color: #151A2D;
   background: #fff;
 }
@@ -180,18 +177,19 @@ body {
   width: 100%;
 }
 
-#discover{
-    color: #151A2D;
-    background: #fff;
+#discover {
+  color: #151A2D;
+  background: #fff;
 }
 
-main{
+main {
   display: flex;
   justify-content: center;
   width: 800px;
   margin-left: 400px;
   flex-direction: column;
 }
+
 /* Example CSS */
 .search-container {
   margin: 20px;
@@ -235,7 +233,7 @@ main{
 /* Add styles for the grid container */
 .posts-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding: 20px;
 }
@@ -271,15 +269,15 @@ main{
 /* Modal styling */
 .post-modal {
   position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .modal-content {
@@ -293,8 +291,8 @@ main{
 
 .post-modal img {
   width: 100%;
-    height: auto;
-    border-radius: 8px;
+  height: auto;
+  border-radius: 8px;
 }
 
 .comments {
@@ -317,9 +315,9 @@ main{
   font-size: 16px;
 }
 
-.active{
-  background-color:white;
-  color: #104c8a !important; 
+.active {
+  background-color: white;
+  color: #104c8a !important;
 }
 
 #signOut {
@@ -328,8 +326,14 @@ main{
   width: 100%;
 }
 
-
 /* Responsive media query code for small screens */
+@media (max-width: 1200px) {
+  .posts-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
 @media (max-width: 920px) {
   .sidebar {
     height: 56px;
@@ -338,7 +342,7 @@ main{
     scrollbar-width: none;
     width: calc(100% - 26px);
     max-height: calc(100vh - 26px);
-    margin-top:10px ;
+    margin-top: 10px;
   }
 
   .sidebar.menu-active {
@@ -363,7 +367,7 @@ main{
   .sidebar-nav .nav-item:hover .nav-tooltip {
     display: none;
   }
-  
+
   .sidebar-header .menu-toggler {
     display: flex;
     height: 30px;
@@ -392,14 +396,48 @@ main{
     position: relative;
     bottom: 0;
     margin: 40px 0 30px;
-
   }
 
-  
+  main {
+    width: 100%;
+    margin-left: 0;
+    padding: 20px;
+  }
+
   .search-container {
     margin: 20px;
     display: flex;
-    width: auto;
     margin-top: 100px;
+    width: 100%;
+  }
+
+  #search-bar {
+    width: 100%;
+    margin-left: -17px;
+
+  }
+
+  .posts-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .post-item {
+    margin-bottom: 10px;
+  }
+
+  .post-image {
+    height: 150px;
+  }
 }
+
+@media (max-width: 600px) {
+  .posts-grid {
+    grid-template-columns: repeat(3, 1fr);
+    
+  }
+
+  .post-image {
+    height: 100px;
+  }
 }

@@ -1,6 +1,6 @@
 // Firebase Configuration
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getAuth, onAuthStateChanged ,signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
 
@@ -27,7 +27,7 @@ const usernameElement = document.getElementById('username');
 const bioElement = document.getElementById('bio');
 const followersCount = document.getElementById('followers-count');
 const followingCount = document.getElementById('following-count');
-const postsGrid = document.getElementById('posts-grid'); 
+const postsGrid = document.getElementById('posts-grid');
 const editProfileBtn = document.getElementById('edit-profile-btn');
 const editProfileModal = document.getElementById('edit-profile-modal');
 const saveProfileBtn = document.getElementById('save-profile-btn');
@@ -64,7 +64,7 @@ async function loadUserProfile(uid) {
             profileImg.src = profileImageUrl;
             nameElement.textContent = userData.name || 'No Name';
             usernameElement.textContent = userData.username;
-            bioElement.textContent = userData.bio || ''; 
+            bioElement.textContent = userData.bio || '';
             followersCount.textContent = userData.followersCount || 0;
             followingCount.textContent = userData.followingCount || 0;
 
@@ -89,9 +89,9 @@ async function loadUserProfile(uid) {
 // Load User Posts
 async function loadUserPosts(uid) {
     try {
-        const postsQuery = query(collection(firestore, 'posts'), where('userId', '==', uid)); 
+        const postsQuery = query(collection(firestore, 'posts'), where('userId', '==', uid));
         const querySnapshot = await getDocs(postsQuery);
-        
+
         postsGrid.innerHTML = ''; // Clear previous posts before adding new ones
 
         if (querySnapshot.empty) {
@@ -105,17 +105,17 @@ async function loadUserPosts(uid) {
                 const post = doc.data();
                 const postId = doc.id;  // Get the post's unique ID from Firestore
                 const postDiv = document.createElement('a');
-                
+
                 // Set the link to post-details.html with the postId as a query parameter
                 postDiv.href = `post-details.html?postId=${postId}`;
                 postDiv.classList.add('post-item');
-                
+
                 if (post.post) {
                     const postImg = document.createElement('img');
                     postImg.src = post.post; // Assuming the post has an image URL
-                    postImg.style.width = '250px'; 
-                    postImg.style.height = '250px'; 
-                    postImg.style.objectFit = 'cover'; 
+                    postImg.style.width = '250px';
+                    postImg.style.height = '250px';
+                    postImg.style.objectFit = 'cover';
 
                     // Append the image to the post div
                     postDiv.appendChild(postImg);
@@ -188,15 +188,18 @@ saveProfileBtn.addEventListener('click', async () => {
 
             // Check if a file is selected
             if (profileImgFile) {
-                console.log('Uploading file: ', profileImgFile);
+                // Validate image file type
+                if (!validateImageFile(profileImgFile)) {
+                    alert("Please select a valid image file (JPEG, PNG, GIF).");
+                    return;
+                }
 
-                // Create FormData to send the file to Cloudinary
+                // Upload the file to Cloudinary
                 const formData = new FormData();
                 formData.append('file', profileImgFile);
                 formData.append('upload_preset', 'ml_default');  // Your Cloudinary upload preset
                 formData.append('cloud_name', 'dzyypiqod'); // Cloudinary account name
 
-                // Upload the file to Cloudinary (adjust this code to use your Cloudinary API)
                 const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dzyypiqod/upload', {
                     method: 'POST',
                     body: formData,
@@ -245,25 +248,30 @@ function showError(inputField, errorMessage) {
     inputField.parentElement.appendChild(errorSpan);
 }
 
+// Function to validate image file type
+function validateImageFile(file) {
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    return validImageTypes.includes(file.type);
+}
+
 // Cancel Edit Profile
 cancelEditBtn.addEventListener('click', () => {
     editProfileModal.style.display = 'none';
 });
 
-
 // Logout Functionality
 const logoutButton = document.getElementById("signOut");
 
 if (logoutButton) {
-  logoutButton.addEventListener("click", () => {
-    signOut(auth)
-      .then(() => {
-        console.log("User signed out successfully.");
-        localStorage.removeItem("uid");  // Optionally clear local storage if used
-        window.location.href = "../../index.html"; // Redirect to login page
-      })
-      .catch((error) => {
-        console.error("Error signing out:", error);
-      });
-  });
+    logoutButton.addEventListener("click", () => {
+        signOut(auth)
+            .then(() => {
+                console.log("User signed out successfully.");
+                localStorage.removeItem("uid");  // Optionally clear local storage if used
+                window.location.href = "../../index.html"; // Redirect to login page
+            })
+            .catch((error) => {
+                console.error("Error signing out:", error);
+            });
+    });
 }

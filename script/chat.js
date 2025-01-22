@@ -1,7 +1,7 @@
 // Firebase initialization code (make sure it's executed before any Firebase calls)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
-import { getAuth,signOut  } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 // Firebase configuration
@@ -52,6 +52,7 @@ function decryptMessage(encryptedMessage) {
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
+// Window onload event to ensure proper initialization
 window.onload = async () => {
   const { targetUserId } = getTargetUserDetailsFromURL();  // Get the target user's UID
 
@@ -61,9 +62,28 @@ window.onload = async () => {
     // Fetch target user's details from Firestore
     const userDetails = await getUserDetails(targetUserId);
     const targetUserName = userDetails ? userDetails.username : "Unknown User";
+    const targetUserProfileImage = userDetails && userDetails.profile ? userDetails.profile : "https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg";
 
-    // Display target user's name in the chat header
-    document.getElementById("targetUserName").innerText = `Chat with ${targetUserName}`;
+    // Display target user's name and profile image in the chat header
+    const targetUserProfile = document.getElementById("targetUserProfile");
+    if (targetUserProfile) {
+      targetUserProfile.innerHTML = `
+        <img src="${targetUserProfileImage}" alt="${targetUserName}'s profile image" class="profile-img">
+        <span id="targetUserName"> ${targetUserName}</span>
+      `;
+    } else {
+      console.error("Element with ID 'targetUserProfile' not found.");
+    }
+
+    // Add event listener to the header div for redirection
+    const headerDiv = document.getElementById("header");
+    if (headerDiv) {
+      headerDiv.addEventListener("click", () => {
+        window.location.href = `userprofile.html?uid=${encodeURIComponent(targetUserId)}`;
+      });
+    } else {
+      console.error("Element with ID 'header' not found.");
+    }
 
     // DOM elements
     const chatWindow = document.getElementById("chatWindow");
@@ -92,30 +112,32 @@ window.onload = async () => {
           timestamp: Date.now()
         });
         messageInput.value = ""; // Clear the input field
-        sendMessageButton.disabled = true; // Disable the button again after sending
       }
     });
 
     // Listen for new messages
     const sortUser = [currentUserId, targetUserId].sort().join("_");
-    onValue(ref(database, `dmedia/chats/${sortUser}`), (snapshot) => {
+    onValue(ref(database, `dmedia/chats/${sortUser}`), async (snapshot) => {
       chatWindow.innerHTML = ""; // Clear the chat window
-      snapshot.forEach((childSnapshot) => {
-        const messageData = childSnapshot.val();
-        const decryptedMessage = decryptMessage(messageData.message); // Decrypt the message
 
-        const messageElement = document.createElement("div");
+      if (snapshot.exists()) {
+        snapshot.forEach((childSnapshot) => {
+          const messageData = childSnapshot.val();
+          const decryptedMessage = decryptMessage(messageData.message); // Decrypt the message
 
-        // Check if the sender is the current user or the target user
-        if (messageData.sender === currentUserId) {
-          messageElement.classList.add("by-me"); // Add class 'by-me' for current user
-        } else {
-          messageElement.classList.add("by-others"); // Add class 'by-others' for others
-        }
-
-        messageElement.textContent = decryptedMessage; // Display the message text
-        chatWindow.appendChild(messageElement);
-      });
+          const messageElement = document.createElement("div");
+          messageElement.classList.add("message");
+          messageElement.classList.add(messageData.sender === currentUserId ? "by-me" : "by-others");
+          messageElement.innerHTML = `
+            <div class="message-body">
+              <p>${decryptedMessage}</p>
+            </div>
+          `;
+          chatWindow.appendChild(messageElement);
+        });
+      } else {
+        console.log("No messages found.");
+      }
     });
 
     // Enable/Disable sendMessageButton based on input field content
