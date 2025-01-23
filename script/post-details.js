@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/fireba
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getAuth ,signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
   authDomain: "dmedia-2c144.firebaseapp.com",
@@ -13,7 +12,6 @@ const firebaseConfig = {
   measurementId: "G-WSJN8XVXWJ"
 };
 
-// Initialize Firebase and Firebase Auth
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -21,7 +19,7 @@ const auth = getAuth(app);
 // Function to get the postId from the URL
 function getPostIdFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('postId'); // This will give you the postId from the URL
+  return urlParams.get('postId'); 
 }
 
 // Function to fetch user details
@@ -33,11 +31,11 @@ async function getUserDetails(userId) {
 
 // Function to fetch post details and display it
 async function fetchPostDetails() {
-  const postId = getPostIdFromURL();  // Get postId from URL
-  if (!postId) return; // If no postId is provided in the URL, exit
+  const postId = getPostIdFromURL();  
+  if (!postId) return; 
 
   try {
-    const postRef = doc(db, "posts", postId);  // Reference to the specific post in Firestore
+    const postRef = doc(db, "posts", postId);  
     const postSnap = await getDoc(postRef);
     if (!postSnap.exists()) {
       console.log("Post not found!");
@@ -60,7 +58,6 @@ async function fetchPostDetails() {
     const postDiv = document.createElement("div");
     postDiv.classList.add("post");
 
-    // User information
     const userDiv = document.createElement("div");
     userDiv.classList.add("user-info");
     
@@ -120,8 +117,8 @@ async function fetchPostDetails() {
     const dateDiv = document.createElement("div");
     dateDiv.classList.add("post-date");
     if (date_of_post) {
-      const postDate = new Date(date_of_post.seconds * 1000); // Firestore timestamp conversion
-      const formattedDate = timeAgo(postDate); // Get relative time
+      const postDate = new Date(date_of_post.seconds * 1000);
+      const formattedDate = timeAgo(postDate); 
       dateDiv.textContent = formattedDate;
     }
     postDiv.appendChild(dateDiv);
@@ -135,7 +132,7 @@ async function fetchPostDetails() {
     actionsDiv.style.top = "-668px";
     actionsDiv.style.left = "280px";
     actionsDiv.style.display = "flex";
-    actionsDiv.style.gap = "10px";  // space between icons
+    actionsDiv.style.gap = "10px";  
 
     // Like icon
     const likeIcon = document.createElement("span");
@@ -172,9 +169,8 @@ async function fetchPostDetails() {
 }
 
 // Function to handle like toggle
-// Function to handle like toggle
 async function toggleLikePost(postId, likes, likeIcon) {
-  const currentUserId = auth.currentUser?.uid; // Ensure the user is logged in
+  const currentUserId = auth.currentUser?.uid; 
   if (!currentUserId) {
     console.log("No user logged in");
     return;
@@ -187,46 +183,28 @@ async function toggleLikePost(postId, likes, likeIcon) {
     if (userHasLiked) {
       // User has already liked the post, so remove the like
       await updateDoc(postRef, {
-        likes: arrayRemove(currentUserId),  // Remove the userId from likes array
+        likes: arrayRemove(currentUserId)  
       });
-      likeIcon.style.color = "gray";  // Change icon to gray (unliked)
-      likeIcon.classList.replace("fa-thumbs-up", "fa-thumbs-o-up"); // Update icon style to unliked
+      likeIcon.style.color = "gray";  
+      likeIcon.classList.replace("fa-thumbs-up", "fa-thumbs-o-up"); 
       console.log("Like removed from post:", postId);
     } else {
       // User has not liked the post, so add the like
       await updateDoc(postRef, {
-        likes: arrayUnion(currentUserId),  // Add the userId to likes array
+        likes: arrayUnion(currentUserId),  
       });
-      likeIcon.style.color = "black";  // Change icon to black (liked)
-      likeIcon.classList.replace("fa-thumbs-o-up", "fa-thumbs-up"); // Update icon style to liked
+      likeIcon.style.color = "black";  
+      likeIcon.classList.replace("fa-thumbs-o-up", "fa-thumbs-up"); 
       console.log("Like added to post:", postId);
     }
 
-    // Optionally update the like count dynamically
-    window.location.reload();  // Reload the page to reflect the updated like count
+    
+    window.location.reload(); 
 
   } catch (error) {
     console.error("Error toggling like:", error);
   }
 }
-
-// Function to update the like count dynamically
-async function updateLikeCount(postId) {
-  const postRef = doc(db, "posts", postId);
-  const postSnap = await getDoc(postRef);
-
-  if (postSnap.exists()) {
-    const postData = postSnap.data();
-    const likeCount = postData.likes ? postData.likes.length : 0;
-    const likeCountElement = document.querySelector(".like-count");
-    
-    if (likeCountElement) {
-      likeCountElement.textContent = likeCount;  // Update the displayed like count
-    }
-  }
-}
-
-
 
 // Function to handle comment icon toggle (opens the comment modal)
 function toggleComments(postId) {
@@ -235,8 +213,6 @@ function toggleComments(postId) {
   const commentInput = document.getElementById("comment-input");
   const submitCommentBtn = document.getElementById("submit-comment");
   const commentsContainer = document.getElementById("comments-container");
-
-  // Open the modal
   commentModal.style.display = "block";
 
   // Fetch and display comments for this post
@@ -276,15 +252,13 @@ async function fetchComments(postId) {
     if (postSnap.exists()) {
       const postData = postSnap.data();
       const comments = postData.comments || [];
-  
-      // Clear existing comments in the modal
-      commentsContainer.innerHTML = "";
+        commentsContainer.innerHTML = "";
   
       // Add each comment to the modal
       if (comments.length > 0) {
         for (const commentData of comments) {
           const { userId, comment } = commentData;
-          const userDetails = await getUserDetails(userId);  // Fetch user details
+          const userDetails = await getUserDetails(userId);  
           const commentUserName = userDetails ? userDetails.username : "Unknown user";
   
           const commentDiv = document.createElement("div");
@@ -294,7 +268,7 @@ async function fetchComments(postId) {
   
           // Create an anchor tag to link to the user's profile
           const commentUserLink = document.createElement("a");
-          commentUserLink.href = `userprofile.html?username=${commentUserName}`;  // Correct URL format for profile
+          commentUserLink.href = `userprofile.html?username=${commentUserName}`;  
           commentUserLink.textContent = `${commentUserName}: `;
           commentUserLink.classList.add("user-link");
   
@@ -323,7 +297,6 @@ async function addComment(postId, newComment) {
 
   // Check if the comment is empty or contains only spaces
   if (!newComment.trim()) {
-    // Display error message for empty comment
     if (!errorMessage) {
       const errorDiv = document.createElement("div");
       errorDiv.id = "comment-error-message";
@@ -331,12 +304,11 @@ async function addComment(postId, newComment) {
       errorDiv.style.color = "red";
       commentInput.insertAdjacentElement("afterend", errorDiv);
     }
-    return; // Exit the function if comment is empty
+    return; 
   }
 
   // Check if the comment exceeds 80 characters
   if (newComment.length > 80) {
-    // Display error message for comment length
     if (!errorMessage) {
       const errorDiv = document.createElement("div");
       errorDiv.id = "comment-error-message";
@@ -344,7 +316,7 @@ async function addComment(postId, newComment) {
       errorDiv.style.color = "red";
       commentInput.insertAdjacentElement("afterend", errorDiv);
     }
-    return; // Exit the function if comment is too long
+    return; 
   }
 
   // If validation passes, remove the error message (if any)
@@ -360,13 +332,11 @@ async function addComment(postId, newComment) {
 
     // Clear the comment input field and refresh the comments
     commentInput.value = "";
-    fetchComments(postId); // Re-fetch comments to display the updated list
+    fetchComments(postId); 
   } catch (error) {
     console.error("Error adding comment:", error);
   }
 }
-
-
 
 // Function to handle save post toggle (save/unsave functionality)
 async function toggleSavePost(postId, saveIcon) {
@@ -381,13 +351,11 @@ async function toggleSavePost(postId, saveIcon) {
       const savedPosts = userData.savedPosts || [];
 
       if (savedPosts.includes(postId)) {
-        // Remove from saved posts
         await updateDoc(userRef, {
           savedPosts: arrayRemove(postId)
         });
         saveIcon.style.color = "gray";
       } else {
-        // Add to saved posts
         await updateDoc(userRef, {
           savedPosts: arrayUnion(postId)
         });
@@ -425,17 +393,6 @@ function timeAgo(date) {
 // Fetch and display the post details on page load
 window.onload = fetchPostDetails;
 
-// Back button event listener
-document.getElementById("back-button").addEventListener("click", function() {
-  if (document.referrer) {
-    // If there is a referrer (previous page), navigate to that
-    window.location.href = document.referrer;
-  } else {
-    // If no referrer (direct access), redirect to a default page, such as the homepage
-    window.location.href = "index.html";  // Change this to your desired default page
-  }
-});
-
 
 // Logout Functionality
 const logoutButton = document.getElementById("signOut");
@@ -445,8 +402,8 @@ if (logoutButton) {
     signOut(auth)
       .then(() => {
         console.log("User signed out successfully.");
-        localStorage.removeItem("uid");  // Optionally clear local storage if used
-        window.location.href = "../../index.html"; // Redirect to login page
+        localStorage.removeItem("uid");  
+        window.location.href = "../../index.html"; 
       })
       .catch((error) => {
         console.error("Error signing out:", error);

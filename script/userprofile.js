@@ -1,9 +1,7 @@
-// Import Firebase services
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, getDocs, updateDoc, arrayUnion, arrayRemove, query, where } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-// Firebase config and initialization
 const firebaseConfig = {
     apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
     authDomain: "dmedia-2c144.firebaseapp.com",
@@ -15,14 +13,12 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth();
 
-// Get URL parameters
 const urlParams = new URLSearchParams(window.location.search);
 const targetUserId = urlParams.get("uid");
 const targetUserName = urlParams.get("username");
 
-// Initialize Firebase Authentication
-const auth = getAuth();
 
 // Fetch user details from Firestore using UID
 async function getUserDetails(uid) {
@@ -30,7 +26,7 @@ async function getUserDetails(uid) {
     const userSnap = await getDoc(userRef);
     if (userSnap.exists()) {
         const userDetails = userSnap.data();
-        userDetails.id = userSnap.id;  // Add user ID for reference
+        userDetails.id = userSnap.id;  
         console.log("User details:", userDetails.id);
         return userDetails;
     } else {
@@ -39,9 +35,8 @@ async function getUserDetails(uid) {
     }
 }
 
-// Fetch the logged-in user's UID
 function getLoggedInUserUid() {
-    const user = auth.currentUser;
+    const user = localStorage.getItem("uid");
     return user ? user.uid : null;
 }
 
@@ -96,7 +91,6 @@ async function handleFollowButtonClick(targetUserId, followButton) {
             followButton.textContent = "Unfollow";
         }
 
-        // Reload the page to reflect the changes
         window.location.reload();
 
     } catch (error) {
@@ -125,9 +119,9 @@ function displayUserProfile(userDetails) {
         // Check if the logged-in user is already following this user
         isFollowing(userDetails.id).then(isFollowingUser => {
             if (isFollowingUser) {
-                followButton.textContent = "Unfollow";  // Change button text to "Unfollow"
+                followButton.textContent = "Unfollow";  
             } else {
-                followButton.textContent = "Follow";  // Change button text to "Follow"
+                followButton.textContent = "Follow";  
             }
 
             // Add event listener for the follow/unfollow button
@@ -177,9 +171,7 @@ async function displayUserPosts(userId) {
                 postImg.style.height = '250px';
                 postImg.style.objectFit = 'cover';
 
-                // Add redirection on image click
                 postImg.addEventListener('click', () => {
-                    // Redirect to the post-details page with the post's UID
                     window.location.href = `post-details.html?postId=${doc.id}`;
                 });
 
@@ -212,8 +204,8 @@ if (logoutButton) {
         signOut(auth)
             .then(() => {
                 console.log("User signed out successfully.");
-                localStorage.removeItem("uid");  // Optionally clear local storage if used
-                window.location.href = "../../index.html"; // Redirect to login page
+                localStorage.removeItem("uid");  
+                window.location.href = "../../index.html"; 
             })
             .catch((error) => {
                 console.error("Error signing out:", error);

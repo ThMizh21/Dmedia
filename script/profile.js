@@ -1,10 +1,8 @@
-// Firebase Configuration
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
 
-// Firebase initialization
 const firebaseConfig = {
     apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
     authDomain: "dmedia-2c144.firebaseapp.com",
@@ -20,7 +18,6 @@ const auth = getAuth(app);
 const firestore = getFirestore(app);
 const storage = getStorage(app);
 
-// DOM references
 const profileImg = document.getElementById('profile-img');
 const nameElement = document.getElementById('name');
 const usernameElement = document.getElementById('username');
@@ -36,27 +33,22 @@ const editNameInput = document.getElementById('edit-name');
 const editUsernameInput = document.getElementById('edit-username');
 const editBioInput = document.getElementById('edit-bio');
 const editProfileImgInput = document.getElementById('edit-profile-img');
+const messageButton = document.getElementById('messageButton');
 
-// Button for messaging (targeting this user's UID)
-const messageButton = document.getElementById('messageButton');  // Assume this is the button in your profile page
-
-// Current User's UID
 let currentUserUid = null;
 
-// Get the current logged-in user
 onAuthStateChanged(auth, (user) => {
     if (user) {
         currentUserUid = user.uid;
         loadUserProfile(currentUserUid);
     } else {
-        window.location.href = '../../index.html'; // Redirect to login if not authenticated
+        window.location.href = '../../index.html';
     }
 });
 
 // Load User Profile
 async function loadUserProfile(uid) {
     try {
-        // Get user data from Firestore
         const userDoc = await getDoc(doc(firestore, 'users', uid));
         if (userDoc.exists()) {
             const userData = userDoc.data();
@@ -69,16 +61,12 @@ async function loadUserProfile(uid) {
             followingCount.textContent = userData.followingCount || 0;
 
             // Dynamically add a message button
-            // Assuming the "messageButton" is dynamically added to the profile page:
             if (messageButton) {
-                // Set message button to redirect to message.html with this user's UID
                 messageButton.addEventListener('click', () => {
-                    // Redirect to message page with targeted user UID
                     window.location.href = `message.html?uid=${uid}`;
                 });
             }
 
-            // Load user posts
             loadUserPosts(uid);
         }
     } catch (error) {
@@ -92,36 +80,32 @@ async function loadUserPosts(uid) {
         const postsQuery = query(collection(firestore, 'posts'), where('userId', '==', uid));
         const querySnapshot = await getDocs(postsQuery);
 
-        postsGrid.innerHTML = ''; // Clear previous posts before adding new ones
+        postsGrid.innerHTML = '';
 
         if (querySnapshot.empty) {
-            // Display a message if no posts are found
             const noPostsMessage = document.createElement('p');
             noPostsMessage.textContent = 'No post yet';
             postsGrid.appendChild(noPostsMessage);
         } else {
-            // If posts are found, display them
             querySnapshot.forEach(doc => {
                 const post = doc.data();
-                const postId = doc.id;  // Get the post's unique ID from Firestore
+                const postId = doc.id;
                 const postDiv = document.createElement('a');
 
-                // Set the link to post-details.html with the postId as a query parameter
                 postDiv.href = `post-details.html?postId=${postId}`;
                 postDiv.classList.add('post-item');
 
                 if (post.post) {
                     const postImg = document.createElement('img');
-                    postImg.src = post.post; // Assuming the post has an image URL
+                    postImg.src = post.post;
                     postImg.style.width = '250px';
                     postImg.style.height = '250px';
                     postImg.style.objectFit = 'cover';
 
-                    // Append the image to the post div
                     postDiv.appendChild(postImg);
                 }
 
-                postsGrid.appendChild(postDiv); // Append the post to the grid
+                postsGrid.appendChild(postDiv);
             });
         }
     } catch (error) {
@@ -129,7 +113,6 @@ async function loadUserPosts(uid) {
     }
 }
 
-// Open Edit Profile Modal
 editProfileBtn.addEventListener('click', async () => {
     try {
         const userDoc = await getDoc(doc(firestore, 'users', currentUserUid));
@@ -148,9 +131,8 @@ saveProfileBtn.addEventListener('click', async () => {
     const newName = editNameInput.value;
     const newUsername = editUsernameInput.value;
     const newBio = editBioInput.value;
-    const profileImgFile = editProfileImgInput.files[0];  // The uploaded image file
+    const profileImgFile = editProfileImgInput.files[0];
 
-    // Clear previous error messages
     const errorMessages = document.querySelectorAll('.error-message');
     errorMessages.forEach((msg) => msg.remove());
 
@@ -163,7 +145,7 @@ saveProfileBtn.addEventListener('click', async () => {
     } else if (newName.length > 20) {
         isValid = false;
         showError(editNameInput, 'Name cannot be more than 20 characters.');
-    } else if (/[^a-zA-Z\s]/.test(newName)) { // Check for special characters
+    } else if (/[^a-zA-Z\s]/.test(newName)) {
         isValid = false;
         showError(editNameInput, 'Name cannot contain special characters.');
     }
@@ -197,8 +179,8 @@ saveProfileBtn.addEventListener('click', async () => {
                 // Upload the file to Cloudinary
                 const formData = new FormData();
                 formData.append('file', profileImgFile);
-                formData.append('upload_preset', 'ml_default');  // Your Cloudinary upload preset
-                formData.append('cloud_name', 'dzyypiqod'); // Cloudinary account name
+                formData.append('upload_preset', 'ml_default');
+                formData.append('cloud_name', 'dzyypiqod');
 
                 const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/dzyypiqod/upload', {
                     method: 'POST',
@@ -211,18 +193,16 @@ saveProfileBtn.addEventListener('click', async () => {
                 // If no file is selected, do not change the profile image
                 const userDoc = await getDoc(doc(firestore, 'users', currentUserUid));
                 const existingUserData = userDoc.data();
-                profileImageUrl = existingUserData.profile || null; // Retain existing profile image
+                profileImageUrl = existingUserData.profile || null;
             }
 
-            // Update user document in Firestore with new profile information (no image change if no file uploaded)
             await updateDoc(doc(firestore, 'users', currentUserUid), {
                 name: newName,
                 username: newUsername,
                 bio: newBio,
-                profile: profileImageUrl, // This will either be the new URL or the existing one
+                profile: profileImageUrl,
             });
 
-            // Update UI with new profile data
             profileImg.src = profileImageUrl || 'https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg';
             nameElement.textContent = newName;
             usernameElement.textContent = newUsername;
@@ -267,8 +247,8 @@ if (logoutButton) {
         signOut(auth)
             .then(() => {
                 console.log("User signed out successfully.");
-                localStorage.removeItem("uid");  // Optionally clear local storage if used
-                window.location.href = "../../index.html"; // Redirect to login page
+                localStorage.removeItem("uid");
+                window.location.href = "../../index.html";
             })
             .catch((error) => {
                 console.error("Error signing out:", error);

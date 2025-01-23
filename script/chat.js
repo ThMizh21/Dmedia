@@ -1,10 +1,8 @@
-// Firebase initialization code (make sure it's executed before any Firebase calls)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
   authDomain: "dmedia-2c144.firebaseapp.com",
@@ -15,7 +13,6 @@ const firebaseConfig = {
   appId: "1:636638599757:web:01c82ddff12b4d2ba45a04"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
@@ -24,7 +21,7 @@ const firestore = getFirestore(app);
 // Function to get the target user's UID from the URL
 function getTargetUserDetailsFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
-  const targetUserId = urlParams.get("uid");  // Retrieve the target user's UID from URL
+  const targetUserId = urlParams.get("uid");  
   return { targetUserId };
 }
 
@@ -41,7 +38,7 @@ async function getUserDetails(uid) {
 }
 
 // Encryption and Decryption functions
-const secretKey = "ThMizh@2116"; // Replace with your own secret key
+const secretKey = "ThMizh@2116"; 
 
 function encryptMessage(message) {
   return CryptoJS.AES.encrypt(message, secretKey).toString();
@@ -52,19 +49,16 @@ function decryptMessage(encryptedMessage) {
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
-// Window onload event to ensure proper initialization
 window.onload = async () => {
-  const { targetUserId } = getTargetUserDetailsFromURL();  // Get the target user's UID
+  const { targetUserId } = getTargetUserDetailsFromURL();  
 
   if (targetUserId) {
     console.log("Target User UID:", targetUserId);
 
-    // Fetch target user's details from Firestore
     const userDetails = await getUserDetails(targetUserId);
     const targetUserName = userDetails ? userDetails.username : "Unknown User";
     const targetUserProfileImage = userDetails && userDetails.profile ? userDetails.profile : "https://res.cloudinary.com/dzyypiqod/image/upload/v1733321879/download_5_m3yb4o.jpg";
 
-    // Display target user's name and profile image in the chat header
     const targetUserProfile = document.getElementById("targetUserProfile");
     if (targetUserProfile) {
       targetUserProfile.innerHTML = `
@@ -75,7 +69,7 @@ window.onload = async () => {
       console.error("Element with ID 'targetUserProfile' not found.");
     }
 
-    // Add event listener to the header div for redirection
+    // event listener to the header div for redirection
     const headerDiv = document.getElementById("header");
     if (headerDiv) {
       headerDiv.addEventListener("click", () => {
@@ -85,12 +79,10 @@ window.onload = async () => {
       console.error("Element with ID 'header' not found.");
     }
 
-    // DOM elements
     const chatWindow = document.getElementById("chatWindow");
     const messageInput = document.getElementById("messageInput");
     const sendMessageButton = document.getElementById("sendMessageButton");
 
-    // Current user ID (assume it's stored in localStorage or session)
     const currentUserId = localStorage.getItem("uid");
 
     if (!currentUserId) {
@@ -102,28 +94,28 @@ window.onload = async () => {
     sendMessageButton.addEventListener("click", () => {
       const message = messageInput.value.trim();
       if (message) {
-        const encryptedMessage = encryptMessage(message); // Encrypt the message
+        const encryptedMessage = encryptMessage(message);
         const sortUser = [currentUserId, targetUserId].sort().join("_");
         const chatRef = ref(database, `dmedia/chats/${sortUser}`);
         push(chatRef, {
           sender: currentUserId,
           receiver: targetUserId,
-          message: encryptedMessage, // Store the encrypted message
+          message: encryptedMessage, 
           timestamp: Date.now()
         });
-        messageInput.value = ""; // Clear the input field
+        messageInput.value = ""; 
       }
     });
 
     // Listen for new messages
     const sortUser = [currentUserId, targetUserId].sort().join("_");
     onValue(ref(database, `dmedia/chats/${sortUser}`), async (snapshot) => {
-      chatWindow.innerHTML = ""; // Clear the chat window
+      chatWindow.innerHTML = ""; 
 
       if (snapshot.exists()) {
         snapshot.forEach((childSnapshot) => {
           const messageData = childSnapshot.val();
-          const decryptedMessage = decryptMessage(messageData.message); // Decrypt the message
+          const decryptedMessage = decryptMessage(messageData.message); 
 
           const messageElement = document.createElement("div");
           messageElement.classList.add("message");
@@ -143,9 +135,9 @@ window.onload = async () => {
     // Enable/Disable sendMessageButton based on input field content
     messageInput.addEventListener("input", () => {
       if (messageInput.value.trim()) {
-        sendMessageButton.disabled = false; // Enable the button if there is text
+        sendMessageButton.disabled = false; 
       } else {
-        sendMessageButton.disabled = true; // Disable the button if input is empty
+        sendMessageButton.disabled = true; 
       }
     });
 
@@ -162,8 +154,8 @@ if (logoutButton) {
     signOut(auth)
       .then(() => {
         console.log("User signed out successfully.");
-        localStorage.removeItem("uid");  // Optionally clear local storage if used
-        window.location.href = "../../index.html"; // Redirect to login page
+        localStorage.removeItem("uid");
+        window.location.href = "../../index.html"; 
       })
       .catch((error) => {
         console.error("Error signing out:", error);
