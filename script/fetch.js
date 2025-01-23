@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/fireba
 import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, arrayUnion, arrayRemove ,query,where , orderBy } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
   authDomain: "dmedia-2c144.firebaseapp.com",
@@ -13,30 +12,25 @@ const firebaseConfig = {
   measurementId: "G-WSJN8XVXWJ"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
 const db = getFirestore(app);
-
-// Initialize Firebase Authentication
 const auth = getAuth(app);
-let currentUserId = null;  // To store the current user's ID
+let currentUserId = null;  
 
-// Listen for authentication state changes (log in or log out)
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    currentUserId = user.uid; // Set the currentUserId to the logged-in user's UID
+    currentUserId = user.uid; 
     console.log("User logged in with UID:", currentUserId);
 
-    // Fetch posts after the user is authenticated
+    
     fetchPosts();
     fetchUserProfile();
     fetchAppStats();
   } else {
-    currentUserId = null; // No user logged in
+    currentUserId = null; 
     console.log("No user logged in");
-    window.location.href = "../../index.html";  // Redirect to login page if not authenticated
+    window.location.href = "../../index.html"; 
   }
 });
 
@@ -46,7 +40,7 @@ async function getUserDetails(userId) {
   const userSnap = await getDoc(userRef);
 
   if (userSnap.exists()) {
-    return userSnap.data(); // { username, profile }
+    return userSnap.data();
   } else {
     console.log("User not found!");
     return null;
@@ -124,19 +118,19 @@ function createCommentModal(postId, comments) {
 
       // Create a box for each comment
       const commentBox = document.createElement("div");
-      commentBox.style.border = "1px solid #ddd"; // Light border for the box
-      commentBox.style.borderRadius = "8px"; // Rounded corners
+      commentBox.style.border = "1px solid #ddd"; 
+      commentBox.style.borderRadius = "8px";
       commentBox.style.padding = "10px";
-      commentBox.style.marginBottom = "10px"; // Space between comments
-      commentBox.style.backgroundColor = "#f9f9f9"; // Light background color
+      commentBox.style.marginBottom = "10px"; 
+      commentBox.style.backgroundColor = "#f9f9f9"; 
 
       const commentText = document.createElement("p");
 
       // Create an anchor tag to link to the user's profile
       const commentUserLink = document.createElement("a");
-      commentUserLink.href = `userprofile.html?username=${commentUserName}`;  // Link to profile page using username
+      commentUserLink.href = `userprofile.html?username=${commentUserName}`;  
       commentUserLink.textContent = `${commentUserName}: `;
-      commentUserLink.classList.add("user-link");  // Optional: Add a class for styling
+      commentUserLink.classList.add("user-link"); 
 
       commentText.appendChild(commentUserLink);
       commentText.appendChild(document.createTextNode(comment));
@@ -165,7 +159,7 @@ function createCommentModal(postId, comments) {
   submitCommentButton.onclick = async () => {
     const comment = commentInput.value.trim();
     if (comment) {
-      // Add comment to Firestore
+      
       const postRef = doc(db, "posts", postId);
       await updateDoc(postRef, {
         comments: arrayUnion({
@@ -173,8 +167,8 @@ function createCommentModal(postId, comments) {
           comment: comment
         })
       });
-      commentInput.value = ''; // clear input field
-      fetchPosts(); // Re-fetch posts to update comments
+      commentInput.value = ''; 
+      fetchPosts(); 
     }
   };
   modalContent.appendChild(submitCommentButton);
@@ -186,16 +180,15 @@ function createCommentModal(postId, comments) {
 
 // Function to fetch posts
 async function fetchPosts() {
-  if (!currentUserId) return; // Ensure user is logged in before fetching posts
+  if (!currentUserId) return; 
 
   try {
     const postsCollectionRef = collection(db, "posts");
-    const q = query(postsCollectionRef, orderBy("date_of_post", "desc")); // Order by date_of_post in descending order
+    const q = query(postsCollectionRef, orderBy("date_of_post", "desc")); 
     const querySnapshot = await getDocs(q);
 
-    // Clear the current posts before re-rendering the updated posts
     const postContainer = document.getElementById("postContainer");
-    postContainer.innerHTML = ''; // Clear the container to prevent duplication
+    postContainer.innerHTML = '';
 
     // Fetch the user's saved posts to check if any post is saved
     const userRef = doc(db, "users", currentUserId);
@@ -232,10 +225,8 @@ async function fetchPosts() {
         userNameDiv.classList.add("userName");
         userNameDiv.textContent = username;
 
-        // Get the UID stored in local storage
         const storedUid = localStorage.getItem("uid");
 
-        // Check if the UID is the same as the stored UID
         if (userId === storedUid) {
             userNameDiv.href = `profile.html`;
         } else {
@@ -334,15 +325,15 @@ async function fetchPosts() {
         const dateDiv = document.createElement("div");
         dateDiv.classList.add("post-date");
         if (date_of_post) {
-          const postDate = new Date(date_of_post.seconds * 1000); // Firestore timestamp conversion
-          const formattedDate = timeAgo(postDate); // Get relative time
+          const postDate = new Date(date_of_post.seconds * 1000); 
+          const formattedDate = timeAgo(postDate); 
           dateDiv.textContent = formattedDate;
           dateDiv.style.color = "grey";
         }
 
         cDDiv.appendChild(captionDiv);
         cDDiv.appendChild(hashtagDiv);
-        cDDiv.appendChild(dateDiv);  // Append date of post
+        cDDiv.appendChild(dateDiv);  
 
         postDiv.appendChild(cHeadDiv);
         postDiv.appendChild(visCDiv);
@@ -393,14 +384,14 @@ async function toggleLikePost(postId, likes, likeIcon) {
     await updateDoc(postRef, {
       likes: arrayRemove(currentUserId),
     });
-    likeIcon.style.color = "gray";  // Change icon to gray (unliked)
+    likeIcon.style.color = "gray";  
     console.log("Like removed from post:", postId);
     
   } else {
     await updateDoc(postRef, {
       likes: arrayUnion(currentUserId),
     });
-    likeIcon.style.color = "black";  // Change icon to black (liked)
+    likeIcon.style.color = "black";  
     console.log("Like added to post:", postId);
   }
 
@@ -427,18 +418,18 @@ async function savePost(postId, savedIcon) {
       await updateDoc(userRef, {
         savedPosts: arrayRemove(postId),
       });
-      savedIcon.style.color = "gray"; // Change icon color to gray (unsaved)
+      savedIcon.style.color = "gray";
     } else {
       await updateDoc(userRef, {
         savedPosts: arrayUnion(postId),
       });
-      savedIcon.style.color = "black"; // Change icon color to black (saved)
+      savedIcon.style.color = "black"; 
     }
   }
 }
 
-const userProfileImg = document.getElementById("userProfileImg");  // Updated to correct ID
-const userName = document.getElementById("userName");  // Updated to correct ID
+const userProfileImg = document.getElementById("userProfileImg");  
+const userName = document.getElementById("userName");  
 const userPostsCount = document.getElementById("userPostsCount");
 const totalUsersCount = document.getElementById("totalUsersCount");
 const totalPostsCount = document.getElementById("totalPostsCount");
@@ -452,7 +443,7 @@ async function fetchUserProfile() {
   try {
     if (!currentUserId) {
       console.error("User is not logged in.");
-      return; // Ensure user is logged in before fetching profile
+      return; 
     }
 
     const userRef = doc(db, "users", currentUserId);
@@ -469,7 +460,7 @@ async function fetchUserProfile() {
 
       // Fetch the number of posts the user has made
       const postsRef = collection(db, "posts");
-      const postsQuery = query(postsRef, where("userId", "==", currentUserId)); // Assume each post has a `userId` field
+      const postsQuery = query(postsRef, where("userId", "==", currentUserId));
       const postsSnap = await getDocs(postsQuery);
 
       // Store all post IDs in a temporary array (can be used if needed)
@@ -523,31 +514,27 @@ async function fetchUserProfile() {
   }
 }
 
-
+// To fetch the App Stats , user Stats and display them
 async function fetchAppStats() {
   try {
-    // Fetch the total number of users
     const usersCollectionRef = collection(db, "users");
     const usersQuerySnapshot = await getDocs(usersCollectionRef);
     const totalUsers = usersQuerySnapshot.size;
 
-    // Display the total number of users
     if (totalUsersCount) {
       totalUsersCount.textContent = `Total Users: ${totalUsers}`;
     }
 
-    // Fetch the total number of posts
     const postsCollectionRef = collection(db, "posts");
     const postsQuerySnapshot = await getDocs(postsCollectionRef);
     const totalPosts = postsQuerySnapshot.size;
 
-    // Display the total number of posts
     if (totalPostsCount) {
       totalPostsCount.textContent = `Total Posts: ${totalPosts}`;
     }
 
     // Fetch the most popular hashtags
-    const hashtagsMap = new Map(); // Map to store hashtag counts
+    const hashtagsMap = new Map(); 
 
     postsQuerySnapshot.forEach((doc) => {
       const postData = doc.data();
@@ -561,10 +548,8 @@ async function fetchAppStats() {
       }
     });
 
-    // Sort the hashtags by count in descending order
     const sortedHashtags = new Map([...hashtagsMap.entries()].sort((a, b) => b[1] - a[1]));
 
-    // Display the top 5 most popular hashtags
     if (popularHashtagsList) {
       let count = 0;
       sortedHashtags.forEach((value, key) => {
@@ -592,8 +577,8 @@ if (logoutButton) {
     signOut(auth)
       .then(() => {
         console.log("User signed out successfully.");
-        localStorage.removeItem("uid");  // Optionally clear local storage if used
-        window.location.href = "../../index.html"; // Redirect to login page
+        localStorage.removeItem("uid");  
+        window.location.href = "../../index.html"; 
       })
       .catch((error) => {
         console.error("Error signing out:", error);

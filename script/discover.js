@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebas
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-// Firebase configuration and initialization
 const firebaseConfig = {
     apiKey: "AIzaSyCdxssptbJ3BYj-VgaRp7A8pe8TBD4ooq0",
     authDomain: "dmedia-2c144.firebaseapp.com",
@@ -13,22 +12,19 @@ const firebaseConfig = {
     measurementId: "G-WSJN8XVXWJ"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 
-// Get DOM elements
 const searchInput = document.getElementById('search-bar');
 const resultsContainer = document.getElementById('results-container');
 
-// Event listener for input change
 searchInput.addEventListener('input', searchUsersAndPosts);
 
 // Function to get the hashtag from the URL (if it exists)
 function getHashtagFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('hashtag');  // Extract the hashtag parameter from the URL
+    return urlParams.get('hashtag');  
 }
 
 // Function to handle search on page load if there's a hashtag in the URL
@@ -36,13 +32,10 @@ function handleHashtagSearchOnLoad() {
     const hashtagFromURL = getHashtagFromURL();
 
     if (hashtagFromURL) {
-        // Set the hashtag in the search input
         searchInput.value = `#${hashtagFromURL}`;
 
-        // Trigger the search
         searchPosts(`#${hashtagFromURL}`);
     } else {
-        // No hashtag, so fetch and display all posts
         fetchAndDisplayPosts();
     }
 }
@@ -53,12 +46,11 @@ window.onload = handleHashtagSearchOnLoad;
 async function searchUsersAndPosts() {
     const queryValue = searchInput.value.trim();
 
-    // Clear previous results
     resultsContainer.innerHTML = '';
 
     // If the query is empty, fetch and display all posts
     if (!queryValue) {
-        fetchAndDisplayPosts();  // Call function to display all posts
+        fetchAndDisplayPosts();  
         return;
     }
 
@@ -66,10 +58,10 @@ async function searchUsersAndPosts() {
         // If the query starts with '#', search for posts (hashtags)
         if (queryValue.startsWith('#')) {
             console.log('Searching for posts with hashtag:', queryValue);
-            await searchPosts(queryValue); // Search posts by hashtag
+            await searchPosts(queryValue); 
         } else {
             console.log('Searching for users with query:', queryValue);
-            await searchUsers(queryValue); // Search users by username or name
+            await searchUsers(queryValue); 
         }
     } catch (error) {
         console.error('Error during search:', error);
@@ -92,12 +84,10 @@ async function fetchAndDisplayPosts() {
         // Convert snapshot to an array of posts and shuffle it
         const postsArray = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        // Shuffle posts array for random order
         const shuffledPosts = postsArray.sort(() => Math.random() - 0.5);
 
-        // Display each post
         shuffledPosts.forEach(post => {
-            renderPost(post, post.id); // Pass post data and post ID
+            renderPost(post, post.id); 
         });
 
     } catch (error) {
@@ -113,7 +103,7 @@ async function searchUsers(queryValue) {
     // Search for users where username or name contains the query (case-insensitive)
     const userQuery = query(usersRef,
         where('username', '>=', queryValue),
-        where('username', '<=', queryValue + '\uf8ff') // Partial match for username
+        where('username', '<=', queryValue + '\uf8ff') 
     );
 
     try {
@@ -138,7 +128,7 @@ async function searchUsers(queryValue) {
                     </div>
                 </a>
             `;
-            resultsContainer.appendChild(userElement); // Append user result
+            resultsContainer.appendChild(userElement); 
         });
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -150,18 +140,15 @@ function renderPost(postData, postId) {
     const postElement = document.createElement('div');
     postElement.classList.add('post-item');
 
-    // Create a post container
     const postBox = document.createElement('div');
     postBox.classList.add('post-box');
-    postBox.setAttribute('data-post-id', postId); // Store postId as a data attribute
-    console.log('Rendering post with ID:', postId); // Log the post ID
+    postBox.setAttribute('data-post-id', postId); 
+    console.log('Rendering post with ID:', postId); 
 
-    // Check if the post contains video or image
     const mediaUrl = postData.post;
     const fileExtension = mediaUrl ? mediaUrl.split('.').pop().toLowerCase() : null;
     const supportedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'webm', 'ogg'];
 
-    // Render the media (image/video)
     if (mediaUrl && supportedExtensions.includes(fileExtension)) {
         if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
             const postImage = document.createElement('img');
@@ -171,7 +158,6 @@ function renderPost(postData, postId) {
             postImage.classList.add('post-image');
             postBox.appendChild(postImage);
 
-            // Add event listener to the image to redirect to post details page
             postImage.addEventListener('click', function () {
                 window.location.href = `post-details.html?postId=${postId}`;
             });
@@ -180,26 +166,22 @@ function renderPost(postData, postId) {
             postVideo.src = mediaUrl;
             postVideo.style.width = '100%';
             postVideo.style.height = '250px';
-            postVideo.removeAttribute('controls'); // Remove video controls
+            postVideo.removeAttribute('controls'); 
             postBox.appendChild(postVideo);
 
-            // Add event listener to the video to redirect to post details page
             postVideo.addEventListener('click', function () {
                 window.location.href = `post-details.html?postId=${postId}`;
             });
         }
     }
 
-    // Append the postBox to the postElement
     postElement.appendChild(postBox);
 
-    // Append the post to the results container
     resultsContainer.appendChild(postElement);
 }
 
-// Function to search posts by hashtag
 async function searchPosts(queryValue) {
-    const hashtag = queryValue.trim().replace(/^#/, ''); // Remove leading '#'
+    const hashtag = queryValue.trim().replace(/^#/, ''); 
 
     if (!hashtag) {
         return;
@@ -219,9 +201,9 @@ async function searchPosts(queryValue) {
 
         snapshot.forEach(doc => {
             const postData = doc.data();
-            const postId = doc.id;  // Get the document ID (postId)
-            console.log('Found post:', postData); // Log post data
-            renderPost(postData, postId); // Render the post and pass the postId
+            const postId = doc.id;  
+            console.log('Found post:', postData); 
+            renderPost(postData, postId); 
         });
     } catch (error) {
         console.error('Error fetching posts:', error);
@@ -237,8 +219,8 @@ if (logoutButton) {
     signOut(auth)
       .then(() => {
         console.log("User signed out successfully.");
-        localStorage.removeItem("uid");  // Optionally clear local storage if used
-        window.location.href = "../../index.html"; // Redirect to login page
+        localStorage.removeItem("uid"); 
+        window.location.href = "../../index.html"; 
       })
       .catch((error) => {
         console.error("Error signing out:", error);
