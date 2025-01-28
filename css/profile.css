@@ -349,6 +349,11 @@ body {
   width: 100%;
 }
 
+.active {
+  background-color: white;
+  color: #104c8a !important;
+}
+
 
 /* Responsive media query code for small screens */
 @media (max-width: 920px) {

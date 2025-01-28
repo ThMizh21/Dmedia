@@ -15,7 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
-const storage = getStorage(app);
 
 const profileImg = document.getElementById('profile-img');
 const nameElement = document.getElementById('name');

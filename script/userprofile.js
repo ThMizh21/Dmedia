@@ -19,14 +19,17 @@ const urlParams = new URLSearchParams(window.location.search);
 const targetUserId = urlParams.get("uid");
 const targetUserName = urlParams.get("username");
 
+// Fetch user details from Firestore using the username
+async function getUserDetailsByUsername(username) {
+    const usersRef = collection(db, "users");
+    const userQuery = query(usersRef, where("username", "==", username));
+    const querySnapshot = await getDocs(userQuery);
 
-// Fetch user details from Firestore using UID
-async function getUserDetails(uid) {
-    const userRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userRef);
-    if (userSnap.exists()) {
-        const userDetails = userSnap.data();
-        userDetails.id = userSnap.id;  
+    if (!querySnapshot.empty) {
+        // Assuming usernames are unique, we can get the first match
+        const userDoc = querySnapshot.docs[0];
+        const userDetails = userDoc.data();
+        userDetails.id = userDoc.id;  
         console.log("User details:", userDetails.id);
         return userDetails;
     } else {
@@ -35,66 +38,33 @@ async function getUserDetails(uid) {
     }
 }
 
+// Get the logged-in user UID
 function getLoggedInUserUid() {
-    const user = localStorage.getItem("uid");
-    return user ? user.uid : null;
+    const uid = localStorage.getItem("uid");
+    if (!uid) {
+        console.error("User is not logged in.");
+        document.body.innerHTML = '<p>User is not logged in. Please log in and try again.</p>';
+        return null;
+    }
+    return uid;
 }
 
-// Check if the logged-in user is following the target user
-async function isFollowing(targetUserId) {
-    const loggedInUserUid = getLoggedInUserUid();
-    if (!loggedInUserUid) return false;
-
-    const loggedInUserRef = doc(db, "users", loggedInUserUid);
-    const loggedInUserDoc = await getDoc(loggedInUserRef);
-    const loggedInUserData = loggedInUserDoc.data();
-
-    // Check if the logged-in user is in the following list
-    return loggedInUserData.following && loggedInUserData.following.includes(targetUserId);
-}
-
-// Handle follow/unfollow button click
-async function handleFollowButtonClick(targetUserId, followButton) {
+// Fetch and display the user profile
+async function fetchAndDisplayUserProfile() {
     const loggedInUserUid = getLoggedInUserUid();
     if (!loggedInUserUid) {
-        console.error("User is not logged in.");
         return;
     }
 
-    try {
-        const loggedInUserRef = doc(db, "users", loggedInUserUid);
-        const targetUserRef = doc(db, "users", targetUserId);
+    if (!targetUserName) {
+        console.error("Username not found in URL.");
+        document.body.innerHTML = '<p>Username not found. Please check the URL and try again.</p>';
+        return;
+    }
 
-        const currentlyFollowing = await isFollowing(targetUserId);
-
-        if (currentlyFollowing) {
-            // Unfollow action: remove the logged-in user's ID from target's followers and target's ID from logged-in user's following
-            await updateDoc(loggedInUserRef, {
-                following: arrayRemove(targetUserId)
-            });
-            await updateDoc(targetUserRef, {
-                followers: arrayRemove(loggedInUserUid)
-            });
-
-            // Change button text to "Follow"
-            followButton.textContent = "Follow";
-        } else {
-            // Follow action: add the logged-in user's ID to target's followers and target's ID to logged-in user's following
-            await updateDoc(loggedInUserRef, {
-                following: arrayUnion(targetUserId)
-            });
-            await updateDoc(targetUserRef, {
-                followers: arrayUnion(loggedInUserUid)
-            });
-
-            // Change button text to "Unfollow"
-            followButton.textContent = "Unfollow";
-        }
-
-        window.location.reload();
-
-    } catch (error) {
-        console.error("Error following/unfollowing user: ", error);
+    const userDetails = await getUserDetailsByUsername(targetUserName);
+    if (userDetails) {
+        displayUserProfile(userDetails);
     }
 }
 
@@ -132,18 +102,69 @@ function displayUserProfile(userDetails) {
 
         // Set up the "Message" button to redirect to chat page with target user UID and username
         const messageButton = document.getElementById("messageButton");
-        if (messageButton) {
-            messageButton.addEventListener("click", () => {
-                window.location.href = `../pages/chat.html?uid=${encodeURIComponent(targetUserId)}&username=${encodeURIComponent(targetUserName)}`;
-            });
-        } else {
-            console.error("Message button not found.");
-        }
-
-    } else {
-        console.error("User not found.");
+        messageButton.addEventListener("click", () => {
+            window.location.href = `chat.html?uid=${userDetails.id}&username=${userDetails.username}`;
+        });
     }
 }
+
+// Function to check if the logged-in user is following the specified user
+async function isFollowing(userId) {
+    const loggedInUserUid = getLoggedInUserUid();
+    if (!loggedInUserUid) {
+        return false;
+    }
+
+    const userDoc = await getDoc(doc(db, "users", loggedInUserUid));
+    if (userDoc.exists()) {
+        const userData = userDoc.data();
+        return userData.following && userData.following.includes(userId);
+    }
+    return false;
+}
+
+// Function to handle follow/unfollow button click
+async function handleFollowButtonClick(targetUserId, followButton) {
+    const loggedInUserUid = getLoggedInUserUid();
+    if (!loggedInUserUid) {
+        return;
+    }
+
+    const loggedInUserRef = doc(db, "users", loggedInUserUid);
+    const targetUserRef = doc(db, "users", targetUserId);
+
+    try {
+        if (followButton.textContent === "Unfollow") {
+            await updateDoc(loggedInUserRef, {
+                following: arrayRemove(targetUserId)
+            });
+            await updateDoc(targetUserRef, {
+                followers: arrayRemove(loggedInUserUid)
+            });
+
+            // Change button text to "Follow"
+            followButton.textContent = "Follow";
+        } else {
+            await updateDoc(loggedInUserRef, {
+                following: arrayUnion(targetUserId)
+            });
+            await updateDoc(targetUserRef, {
+                followers: arrayUnion(loggedInUserUid)
+            });
+
+            // Change button text to "Unfollow"
+            followButton.textContent = "Unfollow";
+        }
+
+        window.location.reload();
+
+    } catch (error) {
+        console.error("Error following/unfollowing user: ", error);
+    }
+}
+
+// Fetch and display the user profile when the page loads
+window.onload = fetchAndDisplayUserProfile;
 
 // Fetch posts for the user based on their userId
 async function displayUserPosts(userId) {
@@ -185,14 +206,14 @@ async function displayUserPosts(userId) {
 
 // Handle document ready and loading profile and posts
 window.onload = async () => {
-    if (targetUserId) {
-        const userDetails = await getUserDetails(targetUserId);
+    if (targetUserName) {
+        const userDetails = await getUserDetailsByUsername(targetUserName);
         if (userDetails) {
             displayUserProfile(userDetails);
             displayUserPosts(userDetails.id);
         }
     } else {
-        console.error("User ID not found in URL.");
+        console.error("Username not found in URL.");
     }
 };
 
@@ -211,4 +232,4 @@ if (logoutButton) {
                 console.error("Error signing out:", error);
             });
     });
-}
+};
