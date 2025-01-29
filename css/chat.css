@@ -196,6 +196,8 @@ main {
   background: #e4e2e2;
   margin-top: 10px;
   border-radius: 10px;
+  position: sticky;
+  top: 11px;
 }
 
 .head:hover {
@@ -226,6 +228,8 @@ main {
 #chatWindow {
   margin-left: 120px;
   margin-top: 20px;
+  margin-bottom: 85px;
+
 }
 
 .by-me {
